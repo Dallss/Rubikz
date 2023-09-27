@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>rubikz</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="seess.css">
+        <script src="skript.js" async defer></script>
+    </head>
+    
+    <body>
+
+        <header>RUBIKZ</header>
+
+        <div id="game-space">
+            
+            <aside>
+
+                <div id="highs">
+                    <div id="scoreheds">Top Records</div>
+                    <div id="list"></div>
+
+                </div>
+
+                <div id="time">
+                    <div id="mins" style="text-align: end;">0 :</div>
+                    <div id="seconds">00</div>
+                </div>
+
+                <button id="timer"> Start Time!</button>
+                
+                <button id="reset" onclick= "shuffle(), resetTime()"> Reset </button><!-- resets timer and shuffles cube -->
+    
+                <button id="solve" onclick= "solve()"> Solve </button>
+                
+            </aside>
+            
+            <div id="map">
+                
+                <div></div>
+                <div id="upper">
+                    <div>
+                        <div id="upper-cube" class="view" onclick="faceTop()">
+                            <div class="cube-1"></div>
+                            <div class="cube-2"></div>
+                            <div class="cube-3"></div>
+                            <div class="cube-4"></div>
+                            <div class="cube-5"></div>
+                            <div class="cube-6"></div>
+                            <div class="cube-7"></div>
+                            <div class="cube-8"></div>
+                            <div class="cube-9"></div>
+                        </div>
+                    </div>
+                    <div id="top-buttons">
+                        <button class="button-1" onclick="turnLeft(false)">▲</button>
+                        <button class="button-2" onclick="turnCenter(false)">▲</button>
+                        <button class="button-3" onclick="turnRight(false)">▲</button>
+                    </div>
+                </div>
+                <div></div>
+                <div id="left">
+                    <div>
+                        <div id="left-cube" class="view" onclick="faceLeft()">
+                            <div class="1"></div>
+                            <div class="2"></div>
+                            <div class="3"></div>
+                            <div class="4"></div>
+                            <div class="5"></div>
+                            <div class="6"></div>
+                            <div class="7"></div>
+                            <div class="8"></div>
+                            <div class="9"></div>
+                        </div>
+                    </div>
+                    <div id="left-butttons">
+                        <button class="button-1" onclick="turnTop(false)">◀</button>
+                        <button class="button-2" onclick="turnMid(false)">◀</button>
+                        <button class="button-3" onclick="turnBot(false)">◀</button>
+                    </div>
+                </div>
+
+                <div id="main-cube" onclick="faceBack()">
+
+                    <div class="cube-1"></div>
+                    <div class="cube-2"></div>
+                    <div class="cube-3"></div>
+                    <div class="cube-4"></div>
+                    <div class="cube-5"></div>
+                    <div class="cube-6"></div>
+                    <div class="cube-7"></div>
+                    <div class="cube-8"></div>
+                    <div class="cube-9"></div>
+
+                </div>
+
+                <div id="right">
+                    <div id="right-buttons">
+                        <button class="button-1" onclick="turnTop(true)">▶</button>
+                        <button class="button-2" onclick="turnMid(true)">▶</button>
+                        <button class="button-3" onclick="turnBot(true)">▶</button>
+                    </div>
+                    <div>
+                        <div id="right-cube" class="view" onclick="faceRight()">
+                            <div class="1"></div>
+                            <div class="2"></div>
+                            <div class="3"></div>
+                            <div class="4"></div>
+                            <div class="5"></div>
+                            <div class="6"></div>
+                            <div class="7"></div>
+                            <div class="8"></div>
+                            <div class="9"></div>
+                        </div>
+                    </div>
+                </div>
+                <div></div>
+                <div id="bottom">
+                    <div id="down-button">
+                        <button class="button-3" onclick="turnLeft(true)">▼</button>
+                        <button class="button-2" onclick="turnCenter(true)">▼</button>
+                        <button class="button-3" onclick="turnRight(true)">▼</button>
+                    </div>
+                    <div>
+                        <div id="bottom-cube" class="view" onclick="faceBot()">
+                            <div class="1"></div>
+                            <div class="2"></div>
+                            <div class="3"></div>
+                            <div class="4"></div>
+                            <div class="5"></div>
+                            <div class="6"></div>
+                            <div class="7"></div>
+                            <div class="8"></div>
+                            <div class="9"></div>
+                        </div>
+                    </div>
+                </div>
+                <div></div>    
+            </div>
+        </div> 
+
+        <!-- Background animations -->
+        <span class="fbox x o a"></span>
+        <span class="fbox x o b"></span>
+        <span class="fbox x o c"></span>
+        <span class="fbox x o d"></span>
+        <span class="fbox x o e"></span>
+        <span class="fbox x p f"></span>
+        <span class="fbox x p g"></span>
+        <span class="fbox x p h"></span>
+        <span class="fbox x p i"></span>
+        <span class="fbox x p j"></span>
+
+        <span class="fbox y o a"></span>
+        <span class="fbox y o b"></span>
+        <span class="fbox y o c"></span>
+        <span class="fbox y o d"></span>
+        <span class="fbox y o e"></span>
+        <span class="fbox y p f"></span>
+        <span class="fbox y p g"></span>
+        <span class="fbox y p h"></span>
+        <span class="fbox y p i"></span>
+        <span class="fbox y p j"></span>
+
+        <span class="fbox z o a"></span>
+        <span class="fbox z o b"></span>
+        <span class="fbox z o c"></span>
+        <span class="fbox z o d"></span>
+        <span class="fbox z o e"></span>
+        <span class="fbox z p f"></span>
+        <span class="fbox z p g"></span>
+        <span class="fbox z p h"></span>
+        <span class="fbox z p i"></span>
+        <span class="fbox z p j"></span>
+
+
+
+    </body>
+    
+    
+</html>
