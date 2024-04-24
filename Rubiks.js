@@ -1,3 +1,5 @@
+
+
 const face = ['yellow','yellow','yellow','yellow','yellow','yellow','yellow','yellow','yellow']
 const left = ['orange','orange','orange','orange','orange','orange','orange','orange','orange']
 const right = ['red','red','red','red','red','red','red','red','red']
@@ -432,14 +434,6 @@ function stopTime () {
     clearInterval(timerId) 
 
 }
-
-
-
-
-
-
-
-
 
 
 let anims = document.getElementsByClassName('fbox')
