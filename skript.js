@@ -5,6 +5,7 @@ const tp = ['green','green','green','green','green','green','green','green','gre
 const bottom = ['blue','blue','blue','blue','blue','blue','blue','blue','blue']
 const back = ['white','white','white','white','white','white','white','white','white']
 
+
 window.onload = init;
 let sec = document.getElementById('seconds')
 let mins = document.getElementById('mins')
@@ -66,8 +67,10 @@ function init () {
     box.forEach((div, index) => {
         div.style.backgroundColor = bottom[index];
     });
+
 }
 function solve () {
+
     for(i=0;i<9;i++)
         face[i] = 'yellow';
     
@@ -86,6 +89,7 @@ function solve () {
     for(i=0;i<9;i++)
         back[i] = 'white';
     
+    stopTime ();
     init();
 }
 function turnTop (tru) {
@@ -356,46 +360,102 @@ function resetTime () {
     sec.innerHTML = "00"
     mins.innerHTML = "0:"
 }
-function shuffle () {
 
-    let x = 150 + Math.random()*6;
+
+function shuffle() {
+    let colorCounts = {}; // Object to track the count of each color
+
+    // Function to check if a color has appeared exactly 9 times
+    function isColorLimitReached(color) {
+        return (colorCounts[color] || 0) >= 8;
+    }
+
+    let x = 150 + Math.random() * 6;
 
     console.log(x);
-    while(x>=1){
-
-        let y = Math.floor(Math.random()*12);
+    while (x >= 1) {
+        let y = Math.floor(Math.random() * 12);
         console.log(y);
-        switch(y){
+        switch (y) {
             case 0:
-                turnTop(true);
+                if (!isColorLimitReached(face[0])) {
+                    turnTop(true);
+                    colorCounts[face[0]] = (colorCounts[face[0]] || 0) + 1;
+                }
+                break;
             case 1:
-                turnTop(false);
+                if (!isColorLimitReached(face[0])) {
+                    turnTop(false);
+                    colorCounts[face[0]] = (colorCounts[face[0]] || 0) + 1;
+                }
+                break;
             case 2:
-                turnBot(true);
+                if (!isColorLimitReached(face[6])) {
+                    turnBot(true);
+                    colorCounts[face[6]] = (colorCounts[face[6]] || 0) + 1;
+                }
+                break;
             case 3:
-                turnBot(false);
+                if (!isColorLimitReached(face[6])) {
+                    turnBot(false);
+                    colorCounts[face[6]] = (colorCounts[face[6]] || 0) + 1;
+                }
+                break;
             case 4:
-                turnLeft(true);
+                if (!isColorLimitReached(face[0])) {
+                    turnLeft(true);
+                    colorCounts[face[0]] = (colorCounts[face[0]] || 0) + 1;
+                }
+                break;
             case 5:
-                turnLeft(false);
+                if (!isColorLimitReached(face[0])) {
+                    turnLeft(false);
+                    colorCounts[face[0]] = (colorCounts[face[0]] || 0) + 1;
+                }
+                break;
             case 6:
-                turnMid(true);
+                if (!isColorLimitReached(face[4])) {
+                    turnMid(true);
+                    colorCounts[face[4]] = (colorCounts[face[4]] || 0) + 1;
+                }
+                break;
             case 7:
-                turnMid(false);
+                if (!isColorLimitReached(face[4])) {
+                    turnMid(false);
+                    colorCounts[face[4]] = (colorCounts[face[4]] || 0) + 1;
+                }
+                break;
             case 8:
-                turnCenter(true);
+                if (!isColorLimitReached(face[2])) {
+                    turnRight(true);
+                    colorCounts[face[2]] = (colorCounts[face[2]] || 0) + 1;
+                }
+                break;
             case 9:
-                turnCenter(false);
+                if (!isColorLimitReached(face[2])) {
+                    turnRight(false);
+                    colorCounts[face[2]] = (colorCounts[face[2]] || 0) + 1;
+                }
+                break;
             case 10:
-                turnRight(true);
+                if (!isColorLimitReached(tp[4])) {
+                    turnFront(true);
+                    colorCounts[tp[4]] = (colorCounts[tp[4]] || 0) + 1;
+                }
+                break;
             case 11:
-                turnRight(false);
+                if (!isColorLimitReached(tp[4])) {
+                    turnFront(false);
+                    colorCounts[tp[4]] = (colorCounts[tp[4]] || 0) + 1;
+                }
+                break;
         }
 
         x--;
     }
-
 }
+
+
 function startTime () {
     
     console.log('starttiem called')
