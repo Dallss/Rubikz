@@ -33,6 +33,7 @@ cam.position.setZ(30);
 const orbitcont = new OrbitControls(cam, renderer.domElement);
 
 //gemoetries
+const cubeGeometry = new THREE.BoxGeometry(10, 10, 10);
 const cubePiece = new THREE.BoxGeometry(4.5,4.5,4.5);
 
 //materials
@@ -49,30 +50,26 @@ const color = [
 
 //objects
 const axesHelper = new THREE.AxesHelper(25);
-scene.add(axesHelper);
+const cubeMesh = new THREE.Mesh(cubeGeometry, materialgray);
 
 
-function init(){
-  
-  let piece = [];
-  for (let i = 0, x = -5; i < 3; i++, x += 5) {
-    piece[i] = [];
-    for (let j = 0, y = -5; j < 3; j++, y += 5) {
-      piece[i][j] = [];
-      for (let k = 0, z = -5; k < 3; k++, z += 5) {
-        piece[i][j][k] = new THREE.Mesh(cubePiece, color);
-        piece[i][j][k].position.set(x,y,z);
-        scene.add(piece[i][j][k]);
+class Cube {
+  constructor(scene) {
+    this.piece = [];
+
+    // let (0,0,0) be corner on all negatives, and ijk correspond to xyz
+    for (let i = 0, x = -5; i < 3; i++, x += 5) {
+      this.piece[i] = [];
+      for (let j = 0, y = -5; j < 3; j++, y += 5) {
+        this.piece[i][j] = [];
+        for (let k = 0, z = -5; k < 3; k++, z += 5) {
+          this.piece[i][j][k] = new THREE.Mesh(cubePiece, color);
+          this.piece[i][j][k].position.set(x,y,z);
+          scene.add(this.piece[i][j][k]);
+        }
       }
     }
   }
-
-  //corners init
-  piece[0][0][0].angleOnXZPlane = 225
-  piece[0][0][0].angleOnXZPlane = 225
-
-  
-
 }
 
 
@@ -93,33 +90,28 @@ function turn(clockwise, cube){
   cube.piece[2][2][2].position.x = radius * Math.sin(degToRad(angle));
   cube.piece[2][2][2].position.z = radius * Math.cos(degToRad(angle));
   cube.piece[2][2][2].rotation.y = degToRad(angle-45);
+  
+  // cube.piece[2][2][0].position.x = radius * Math.sin(angle);
+  // cube.piece[2][2][0].position.z = radius * Math.cos(angle);
+  // cube.piece[2][2][2].rotation.y = degToRad(angle-45);
+
+  // cube.piece[0][2][2].position.x = radius * Math.sin(angle);
+  // cube.piece[0][2][2].position.z = radius * Math.cos(angle);
+  // cube.piece[2][2][2].rotation.y = degToRad(angle-45);
+
+  // cube.piece[0][2][0].position.x = radius * Math.sin(angle);
+  // cube.piece[0][2][0].position.z = radius * Math.cos(angle);
+  // cube.piece[2][2][2].rotation.y = degToRad(angle-45);
+
+
+  // cube.piece[2][2][0].rotation.y = angle - 44.8;
+  // cube.piece[0][2][0].rotation.y = angle - 44.8;
 
   angle += 1 ;
 
 }
 let turning = false;
 
-
-function animate (){
-  requestAnimationFrame( animate );
-  
-  if(turning){
-    turn(true,rubikz);
-    if((angle-45) % 90 == 0){
-      turn(true, rubikz)
-      turning = false
-    }
-  }
-  
-  console.log(angle)
-
-  renderer.render(scene, cam);
-}
-
-init()
-
-
-//event listeners
 document.addEventListener("DOMContentLoaded", () => {
   const rotateButton = document.querySelector(".rotate");
   rotateButton.addEventListener("click", onpress);
@@ -131,3 +123,31 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
+
+
+scene.add(axesHelper);
+
+
+let rubikz = new Cube(scene);
+let speed = 0;
+function animate (){
+  requestAnimationFrame( animate );
+  
+  if(turning){
+    turn(true,rubikz);
+    if((angle-45) % 90 == 0){
+      turn(true, rubikz)
+      turning = false
+    }
+  }
+  
+
+  // console.log(rubikz.piece[2][2][2].position.x)
+  // console.log(rubikz.piece[2][2][2].position.z)
+  console.log(angle)
+
+  renderer.render(scene, cam);
+}
+
+animate();
+
