@@ -92,6 +92,7 @@ function solve () {
     stopTime ();
     init();
 }
+
 function turnTop (tru) {
 
     //0,1,2,3,5,6,7,8
@@ -270,6 +271,7 @@ function turnLeft (tru){
     }
     init();
 }
+
 function turnCenter (tru){
     const hold = [face[1],face[4],face[7]]
 
@@ -288,6 +290,7 @@ function turnCenter (tru){
     }
     init();
 }
+
 function turnRight (tru){
     const hold = [face[2],face[5],face[8]]
 
@@ -360,101 +363,127 @@ function resetTime () {
     sec.innerHTML = "00"
     mins.innerHTML = "0:"
 }
+function rotateLeft() {
+
+}
+function rotateRight() {
+
+}
+
 
 
 function shuffle() {
-    let colorCounts = {}; // Object to track the count of each color
+    resetTime();
+    
+    // Number of moves for shuffling
+    let totalMoves = 150 + Math.floor(Math.random() * 7);
 
-    // Function to check if a color has appeared exactly 9 times
-    function isColorLimitReached(color) {
-        return (colorCounts[color] || 0) >= 8;
-    }
+    // Initialize color counts to make sure we have exactly 9 of each color
+    const colorCounts = {
+        yellow: 9,
+        orange: 9,
+        red: 9,
+        green: 9,
+        blue: 9,
+        white: 9
+    };
 
-    let x = 150 + Math.random() * 6;
-
-    console.log(x);
-    while (x >= 1) {
-        let y = Math.floor(Math.random() * 12);
-        console.log(y);
-        switch (y) {
+    // Function to perform a random move
+    function performRandomMove() {
+        let move = Math.floor(Math.random() * 12);
+        switch (move) {
             case 0:
-                if (!isColorLimitReached(face[0])) {
-                    turnTop(true);
-                    colorCounts[face[0]] = (colorCounts[face[0]] || 0) + 1;
-                }
+                turnTop(true);
                 break;
             case 1:
-                if (!isColorLimitReached(face[0])) {
-                    turnTop(false);
-                    colorCounts[face[0]] = (colorCounts[face[0]] || 0) + 1;
-                }
+                turnTop(false);
                 break;
             case 2:
-                if (!isColorLimitReached(face[6])) {
-                    turnBot(true);
-                    colorCounts[face[6]] = (colorCounts[face[6]] || 0) + 1;
-                }
+                turnBot(true);
                 break;
             case 3:
-                if (!isColorLimitReached(face[6])) {
-                    turnBot(false);
-                    colorCounts[face[6]] = (colorCounts[face[6]] || 0) + 1;
-                }
+                turnBot(false);
                 break;
             case 4:
-                if (!isColorLimitReached(face[0])) {
-                    turnLeft(true);
-                    colorCounts[face[0]] = (colorCounts[face[0]] || 0) + 1;
-                }
+                turnLeft(true);
                 break;
             case 5:
-                if (!isColorLimitReached(face[0])) {
-                    turnLeft(false);
-                    colorCounts[face[0]] = (colorCounts[face[0]] || 0) + 1;
-                }
+                turnLeft(false);
                 break;
             case 6:
-                if (!isColorLimitReached(face[4])) {
-                    turnMid(true);
-                    colorCounts[face[4]] = (colorCounts[face[4]] || 0) + 1;
-                }
+                turnMid(true);
                 break;
             case 7:
-                if (!isColorLimitReached(face[4])) {
-                    turnMid(false);
-                    colorCounts[face[4]] = (colorCounts[face[4]] || 0) + 1;
-                }
+                turnMid(false);
                 break;
             case 8:
-                if (!isColorLimitReached(face[2])) {
-                    turnRight(true);
-                    colorCounts[face[2]] = (colorCounts[face[2]] || 0) + 1;
-                }
+                turnRight(true);
                 break;
             case 9:
-                if (!isColorLimitReached(face[2])) {
-                    turnRight(false);
-                    colorCounts[face[2]] = (colorCounts[face[2]] || 0) + 1;
-                }
+                turnRight(false);
                 break;
             case 10:
-                if (!isColorLimitReached(tp[4])) {
-                    turnFront(true);
-                    colorCounts[tp[4]] = (colorCounts[tp[4]] || 0) + 1;
-                }
+                turnCenter(true);
                 break;
             case 11:
-                if (!isColorLimitReached(tp[4])) {
-                    turnFront(false);
-                    colorCounts[tp[4]] = (colorCounts[tp[4]] || 0) + 1;
-                }
+                turnCenter(false);
                 break;
         }
-
-        x--;
     }
-}
 
+    // Perform random moves
+    for (let i = 0; i < totalMoves; i++) {
+        performRandomMove();
+    }
+
+    // Function to count colors on the cube
+    function countColors() {
+        const allColors = [...face, ...left, ...right, ...tp, ...bottom, ...back];
+        const counts = { yellow: 0, orange: 0, red: 0, green: 0, blue: 0, white: 0 };
+        allColors.forEach(color => {
+            counts[color]++;
+        });
+        return counts;
+    }
+
+    // Check and adjust color distribution
+    function adjustColors() {
+        const counts = countColors();
+        for (const color in counts) {
+            while (counts[color] < 9) {
+                // Find a color that has more than 9 occurrences
+                for (const excessColor in counts) {
+                    if (counts[excessColor] > 9) {
+                        // Replace an excess color with the deficient color
+                        replaceColor(excessColor, color);
+                        counts[excessColor]--;
+                        counts[color]++;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    // Replace one instance of oldColor with newColor
+    function replaceColor(oldColor, newColor) {
+        const faces = [face, left, right, tp, bottom, back];
+        for (let i = 0; i < faces.length; i++) {
+            for (let j = 0; j < faces[i].length; j++) {
+                if (faces[i][j] === oldColor) {
+                    faces[i][j] = newColor;
+                    return;
+                }
+            }
+        }
+    }
+
+    // Adjust colors if necessary
+    adjustColors();
+
+    // Update the UI after shuffling
+    init();
+}
 
 function startTime () {
     
@@ -493,15 +522,6 @@ function stopTime () {
 
 }
 
-
-
-
-
-
-
-
-
-
 let anims = document.getElementsByClassName('fbox')
     
 for(let i = 0; i < anims.length; i++){
@@ -509,6 +529,8 @@ for(let i = 0; i < anims.length; i++){
     let randomy = -700 + Math.floor(Math.random() * 700)
     anims[i].style.transform = `translate(${randomx}px,${randomy}px)`
 }
+
+
 
 
 
