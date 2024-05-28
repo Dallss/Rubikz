@@ -81,8 +81,18 @@ function init(){
   piece[2][2][2].angleOnXZPlane = 45
 
 
-  
+  //sides init
+  piece[2][0][1].angleOnXZPlane = 90
+  piece[2][2][1].angleOnXZPlane = 90
 
+  piece[1][0][0].angleOnXZPlane = 180
+  piece[1][2][0].angleOnXZPlane = 180
+
+  piece[0][0][1].angleOnXZPlane = 270
+  piece[0][2][1].angleOnXZPlane = 270
+
+  piece[1][0][2].angleOnXZPlane = 0
+  piece[1][2][2].angleOnXZPlane = 0
 }
 
 
@@ -103,7 +113,7 @@ function turn(clockwise){
   let initx = piece[2][2][2].position.x
   let initz = piece[2][2][2].position.z
 
-  const radius = Math.sqrt(Math.pow(initx,2)+Math.pow(initz,2))
+  let radius = Math.sqrt(Math.pow(initx,2)+Math.pow(initz,2))
 
   let angle = piece[2][2][2].angleOnXZPlane
   rotateOneDegree(piece[2][2][2], radius, angle)
@@ -116,6 +126,25 @@ function turn(clockwise){
 
   angle = piece[0][2][0].angleOnXZPlane
   rotateOneDegree(piece[0][2][0], radius, angle)
+
+
+  //sides
+  radius = 5
+  angle = piece[2][2][1].angleOnXZPlane
+  rotateOneDegree(piece[2][2][1], radius, angle)
+
+  angle = piece[0][2][1].angleOnXZPlane
+  rotateOneDegree(piece[0][2][1], radius, angle)
+
+  angle = piece[1][2][0].angleOnXZPlane
+  rotateOneDegree(piece[1][2][0], radius, angle)
+
+  angle = piece[1][2][2].angleOnXZPlane
+  rotateOneDegree(piece[1][2][2], radius, angle)
+
+
+  //mid
+  piece[1][2][1].rotation.y += degToRad(1)
 
 }
 
