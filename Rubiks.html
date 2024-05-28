@@ -20,12 +20,12 @@
             <aside>
 
                 <div id="highs">
-                    <div id="scoreheds">Top Records</div>
+                    <div id="scoreheds" style="text-align: center;">Top Records</div>
                     <div id="list"></div>
 
                 </div>
 
-                <div id="time">
+                <div id="time">  
                     <div id="mins" style="text-align: end;">0 :</div>
                     <div id="seconds">00</div>
                 </div>
@@ -40,7 +40,10 @@
             
             <div id="map">
                 
-                <div></div>
+                <div id="rotate-btn" style="text-align: center; margin-top: 100px;">
+                    <button id="rotate-left-btn" onclick="rotateLeft()">◀</button>
+                </div>
+                
                 <div id="upper">
                     <div>
                         <div id="upper-cube" class="view" onclick="faceTop()">
@@ -61,7 +64,9 @@
                         <button class="button-3" onclick="turnRight(false)">▲</button>
                     </div>
                 </div>
-                <div></div>
+                <div id="rotate-btn" style="text-align: center; margin-top: 100px;">
+                        <button id="rotate-right-btn" onclick="()">▶</button>
+                </div>
                 <div id="left">
                     <div>
                         <div id="left-cube" class="view" onclick="faceLeft()">
