@@ -66,86 +66,65 @@ function init(){
       }
     }
   }
+  let initx = piece[2][2][2].position.x
+  let initz = piece[2][2][2].position.z
+  let radiuscorner = Math.sqrt(Math.pow(initx,2)+Math.pow(initz,2))
 
-  //corners init
-  piece[0][0][0].angleOnXZPlane = 225
-  piece[0][2][0].angleOnXZPlane = 225
+  
+  for(let i=0; i<3; i++){
+    //y-edges init
+    piece[0][i][0].angleOnXZPlane = 225
+    piece[0][i][0].radius = radiuscorner
 
-  piece[0][0][2].angleOnXZPlane = 315
-  piece[0][2][2].angleOnXZPlane = 315
+    piece[0][i][2].angleOnXZPlane = 315
+    piece[0][i][2].radius = radiuscorner
 
-  piece[2][0][0].angleOnXZPlane = 135
-  piece[2][2][0].angleOnXZPlane = 135
+    piece[2][i][0].angleOnXZPlane = 135
+    piece[2][i][0].radius = radiuscorner
 
-  piece[2][0][2].angleOnXZPlane = 45
-  piece[2][2][2].angleOnXZPlane = 45
+    piece[2][i][2].angleOnXZPlane = 45
+    piece[2][i][2].radius = radiuscorner
 
+    //y-sides init
+    piece[2][i][1].angleOnXZPlane = 90
+    piece[2][i][1].radius = 5
 
-  //sides init
-  piece[2][0][1].angleOnXZPlane = 90
-  piece[2][2][1].angleOnXZPlane = 90
+    piece[1][i][0].angleOnXZPlane = 180
+    piece[1][i][0].radius = 5
 
-  piece[1][0][0].angleOnXZPlane = 180
-  piece[1][2][0].angleOnXZPlane = 180
+    piece[0][i][1].angleOnXZPlane = 270
+    piece[0][i][1].radius = 5
 
-  piece[0][0][1].angleOnXZPlane = 270
-  piece[0][2][1].angleOnXZPlane = 270
-
-  piece[1][0][2].angleOnXZPlane = 0
-  piece[1][2][2].angleOnXZPlane = 0
+    piece[1][i][2].angleOnXZPlane = 0
+    piece[1][i][2].radius = 5
+  }
+ 
 }
 
 
 
 //keep track of angle
-function rotateOneDegree(piece, radius, angle){
+function rotateByDeg(piece,degrees){
 
-  piece.position.x = radius * Math.sin(degToRad(angle))
-  piece.position.z = radius * Math.cos(degToRad(angle))
-  piece.rotation.y += degToRad(1)
-  piece.angleOnXZPlane += 1
+  let angle = piece.angleOnXZPlane
+  piece.position.x = piece.radius * Math.sin(degToRad(angle))
+  piece.position.z = piece.radius * Math.cos(degToRad(angle))
+  piece.rotation.y += degToRad(degrees)
+  piece.angleOnXZPlane += degrees
   
 }
 
-function turn(clockwise){
+function turn(degrees, ylayer){ //ylayer 2= top, 0=bottom
 
-  //corners
-  let initx = piece[2][2][2].position.x
-  let initz = piece[2][2][2].position.z
-
-  let radius = Math.sqrt(Math.pow(initx,2)+Math.pow(initz,2))
-
-  let angle = piece[2][2][2].angleOnXZPlane
-  rotateOneDegree(piece[2][2][2], radius, angle)
-
-  angle = piece[0][2][2].angleOnXZPlane
-  rotateOneDegree(piece[0][2][2], radius, angle)
-
-  angle = piece[2][2][0].angleOnXZPlane
-  rotateOneDegree(piece[2][2][0], radius, angle)
-
-  angle = piece[0][2][0].angleOnXZPlane
-  rotateOneDegree(piece[0][2][0], radius, angle)
-
-
-  //sides
-  radius = 5
-  angle = piece[2][2][1].angleOnXZPlane
-  rotateOneDegree(piece[2][2][1], radius, angle)
-
-  angle = piece[0][2][1].angleOnXZPlane
-  rotateOneDegree(piece[0][2][1], radius, angle)
-
-  angle = piece[1][2][0].angleOnXZPlane
-  rotateOneDegree(piece[1][2][0], radius, angle)
-
-  angle = piece[1][2][2].angleOnXZPlane
-  rotateOneDegree(piece[1][2][2], radius, angle)
-
-
+  for(let i=0; i<3; i++){
+    for(let j=0; j<3; j++){
+      if(i == 1 && j == 1)
+        continue
+      rotateByDeg(piece[i][ylayer][j],degrees)
+    }
+  }
   //mid
-  piece[1][2][1].rotation.y += degToRad(1)
-
+  piece[1][ylayer][1].rotation.y += degToRad(degrees)
 }
 
 
@@ -155,22 +134,30 @@ function animate (){
   requestAnimationFrame( animate )
   
   if(turning){
-    
     if(turnby == 1){
       turning = false
     }
-    turn(true)
+
+    let degreesTurnPerAnim = 1 //control unsa kapaspas, negative para bali na tuyok
+    let ylayer = 1 // kung unsa na layer patuyokon, 2 = top, 1=middle, 0=bottom
+
+    turn(degreesTurnPerAnim,ylayer)
     turnby -= 1
   }
 
   renderer.render(scene, cam)
 }
 
+
+//mao ni ang main hahaha
 init()
 animate()
 
-let turnby = 0
+
+
 //event listeners
+let turnby = 0
+
 document.addEventListener("DOMContentLoaded", () => {
   const rotateButton = document.querySelector(".rotate")
   rotateButton.addEventListener("click", onpress)
