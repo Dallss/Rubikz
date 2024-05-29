@@ -69,7 +69,6 @@ function init(){
   let initx = piece[2][2][2].position.x
   let initz = piece[2][2][2].position.z
   let radiuscorner = Math.sqrt(Math.pow(initx,2)+Math.pow(initz,2))
-
   
   for(let i=0; i<3; i++){
     //y-edges init
@@ -84,6 +83,7 @@ function init(){
 
     piece[2][i][2].angleOnXZPlane = 45
     piece[2][i][2].radius = radiuscorner
+    
 
     //y-sides init
     piece[2][i][1].angleOnXZPlane = 90
@@ -98,13 +98,72 @@ function init(){
     piece[1][i][2].angleOnXZPlane = 0
     piece[1][i][2].radius = 5
   }
+
+  
+  for(let x=0; x<3; x++){
+    //x-edges init
+    piece[x][0][0].angleOnYZPlane = 225
+    piece[x][0][0].radius = radiuscorner
+
+    piece[x][0][2].angleOnYZPlane = 315
+    piece[x][0][2].radius = radiuscorner
+
+    piece[x][2][0].angleOnYZPlane = 135
+    piece[x][2][0].radius = radiuscorner
+
+    piece[x][2][2].angleOnYZPlane = 45
+    piece[x][2][2].radius = radiuscorner
+
+    //x-sides init
+    piece[x][2][1].angleOnYZPlane = 90
+    piece[x][2][1].radius = 5
+
+    piece[x][1][0].angleOnYZPlane = 180
+    piece[x][1][0].radius = 5
+
+    piece[x][0][1].angleOnYZPlane = 270
+    piece[x][0][1].radius = 5
+
+    piece[x][1][2].angleOnYZPlane = 0
+    piece[x][1][2].radius = 5
+  }
+
+  for(let z=0; z<3; z++){
+    //z-edges init
+    piece[0][0][z].angleOnXYPlane = 225
+    piece[0][0][z].radius = radiuscorner
+    
+
+    piece[0][2][z].angleOnXYPlane = 315
+    piece[0][2][z].radius = radiuscorner
+
+    piece[2][0][z].angleOnXYPlane = 135
+    piece[2][0][z].radius = radiuscorner
+
+    piece[2][2][z].angleOnXYPlane = 45
+    piece[2][2][z].radius = radiuscorner
+    
+
+    //z-sides init
+    piece[2][1][z].angleOnXYPlane = 90
+    piece[2][1][z].radius = 5
+
+    piece[1][0][z].angleOnXYPlane = 180
+    piece[1][0][z].radius = 5
+
+    piece[0][1][z].angleOnXYPlane = 270
+    piece[0][1][z].radius = 5
+
+    piece[1][2][z].angleOnXYPlane = 0
+    piece[1][2][z].radius = 5
+  }
+
+  // do yz xy planes to finish the madafakin job
  
 }
 
-
-
 //keep track of angle
-function rotateByDeg(piece,degrees){
+function rotateOnYAxis(piece,degrees){
 
   let angle = piece.angleOnXZPlane
   piece.position.x = piece.radius * Math.sin(degToRad(angle))
@@ -114,19 +173,62 @@ function rotateByDeg(piece,degrees){
   
 }
 
-function turn(degrees, ylayer){ //ylayer 2= top, 0=bottom
+function rotateOnXAxis(piece,degrees){
+
+  let angle = piece.angleOnYZPlane
+  piece.position.y = piece.radius * Math.cos(degToRad(angle))
+  piece.position.z = piece.radius * Math.sin(degToRad(angle))
+  piece.rotation.x += degToRad(degrees)
+  piece.angleOnYZPlane += degrees
+  
+}
+
+function rotateOnZAxis(piece,degrees){
+
+  let angle = piece.angleOnXYPlane
+  piece.position.x = piece.radius * Math.cos(degToRad(angle))
+  piece.position.y = piece.radius * Math.sin(degToRad(angle))
+  piece.rotation.z += degToRad(degrees)
+  piece.angleOnXYPlane += degrees
+  
+}
+
+function turnY(degrees, layer){ //ylayer 2= top, 0=bottom
 
   for(let i=0; i<3; i++){
     for(let j=0; j<3; j++){
       if(i == 1 && j == 1)
         continue
-      rotateByDeg(piece[i][ylayer][j],degrees)
+      rotateOnYAxis(piece[i][layer][j],degrees)
     }
   }
   //mid
   piece[1][ylayer][1].rotation.y += degToRad(degrees)
 }
 
+function turnX(degrees, layer){
+  for(let i=0; i<3; i++){
+    for(let j=0; j<3; j++){
+      if(i == 1 && j == 1)
+        continue
+      rotateOnXAxis(piece[layer][i][j],degrees)
+    }
+  }
+  //mid
+  piece[layer][1][1].rotation.x += degToRad(degrees)
+}
+
+function turnZ(degrees, layer){
+  for(let i=0; i<3; i++){
+    for(let j=0; j<3; j++){
+      if(i == 1 && j == 1)
+        continue
+      rotateOnZAxis(piece[j][i][layer],degrees)
+    }
+  }
+  //mid
+  piece[1][1][layer].rotation.z += degToRad(degrees)
+}
 
 let turning = false
 
@@ -139,9 +241,10 @@ function animate (){
     }
 
     let degreesTurnPerAnim = 1 //control unsa kapaspas, negative para bali na tuyok
-    let ylayer = 1 // kung unsa na layer patuyokon, 2 = top, 1=middle, 0=bottom
+    // let ylayer = 1 // kung unsa na layer patuyokon, 2 = top, 1=middle, 0=bottom
 
-    turn(degreesTurnPerAnim,ylayer)
+    // turn(degreesTurnPerAnim,ylayer)
+    turnZ(degreesTurnPerAnim, 1)
     turnby -= 1
   }
 
