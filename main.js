@@ -29,7 +29,7 @@ renderer.setPixelRatio(window.devicePixelRatio)
 renderer.setSize(window.innerWidth*0.6, window.innerHeight*0.6)
 
 //camera
-cam.position.setZ(30)
+cam.position.set(20,20,20)
 const orbitcont = new OrbitControls(cam, renderer.domElement)
 
 //gemoetries
@@ -99,7 +99,6 @@ function init(){
     piece[1][i][2].radius = 5
   }
 
-  
   for(let x=0; x<3; x++){
     //x-edges init
     piece[x][0][0].angleOnYZPlane = 225
@@ -128,37 +127,35 @@ function init(){
     piece[x][1][2].radius = 5
   }
 
-  for(let z=0; z<3; z++){
-    //z-edges init
-    piece[0][0][z].angleOnXYPlane = 225
-    piece[0][0][z].radius = radiuscorner
+  // for(let z=0; z<3; z++){
+  //   //z-edges init
+  //   piece[0][0][z].angleOnXYPlane = 225
+  //   piece[0][0][z].radius = radiuscorner
     
 
-    piece[0][2][z].angleOnXYPlane = 315
-    piece[0][2][z].radius = radiuscorner
+  //   piece[0][2][z].angleOnXYPlane = 315
+  //   piece[0][2][z].radius = radiuscorner
 
-    piece[2][0][z].angleOnXYPlane = 135
-    piece[2][0][z].radius = radiuscorner
+  //   piece[2][0][z].angleOnXYPlane = 135
+  //   piece[2][0][z].radius = radiuscorner
 
-    piece[2][2][z].angleOnXYPlane = 45
-    piece[2][2][z].radius = radiuscorner
+  //   piece[2][2][z].angleOnXYPlane = 45
+  //   piece[2][2][z].radius = radiuscorner
     
 
-    //z-sides init
-    piece[2][1][z].angleOnXYPlane = 90
-    piece[2][1][z].radius = 5
+  //   //z-sides init
+  //   piece[2][1][z].angleOnXYPlane = 90
+  //   piece[2][1][z].radius = 5
 
-    piece[1][0][z].angleOnXYPlane = 180
-    piece[1][0][z].radius = 5
+  //   piece[1][0][z].angleOnXYPlane = 180
+  //   piece[1][0][z].radius = 5
 
-    piece[0][1][z].angleOnXYPlane = 270
-    piece[0][1][z].radius = 5
+  //   piece[0][1][z].angleOnXYPlane = 270
+  //   piece[0][1][z].radius = 5
 
-    piece[1][2][z].angleOnXYPlane = 0
-    piece[1][2][z].radius = 5
-  }
-
-  // do yz xy planes to finish the madafakin job
+  //   piece[1][2][z].angleOnXYPlane = 0
+  //   piece[1][2][z].radius = 5
+  // }
  
 }
 
@@ -230,22 +227,26 @@ function turnZ(degrees, layer){
   piece[1][1][layer].rotation.z += degToRad(degrees)
 }
 
-let turning = false
+let turning = 0
+let sidetoturn = ''
+let vector = 1
 
 function animate (){
   requestAnimationFrame( animate )
   
-  if(turning){
-    if(turnby == 1){
-      turning = false
+  if(turning > 0){
+    switch(sidetoturn){
+      case 'x2':
+        turnX(vector, 2)
+        break
+      case 'y2':
+        turnY(vector, 2)
+        break
+      case 'z0':
+        turnZ(vector, 2)
+        break
     }
-
-    let degreesTurnPerAnim = 1 //control unsa kapaspas, negative para bali na tuyok
-    // let ylayer = 1 // kung unsa na layer patuyokon, 2 = top, 1=middle, 0=bottom
-
-    // turn(degreesTurnPerAnim,ylayer)
-    turnZ(degreesTurnPerAnim, 1)
-    turnby -= 1
+    turning -= 1
   }
 
   renderer.render(scene, cam)
@@ -258,18 +259,19 @@ animate()
 
 
 
-//event listeners
-let turnby = 0
+//event listeners 0
 
-document.addEventListener("DOMContentLoaded", () => {
-  const rotateButton = document.querySelector(".rotate")
-  rotateButton.addEventListener("click", onpress)
 
-  function onpress() {
-    if(!turning){
-      console.log("Button clicked!")
-      turning = true
-      turnby = 90
-    }
+
+
+document.querySelector('#x2').addEventListener("click", (e)=>{
+
+  if(turning == 0){
+    turning = 90
+    sidetoturn = 'x2'
+
   }
 })
+
+
+///NOTESS: angle on axes should not be an attribute. should be derrived from xy values. 
