@@ -359,6 +359,7 @@ aside>button:hover{
 
 
 /* general */
+<<<<<<< Updated upstream
     #rotate-left-btn {
         display: block;
         margin: 0 auto; /* Center horizontally */
@@ -378,6 +379,8 @@ aside>button:hover{
         padding: 20px; /* Adjust padding for better appearance */
         cursor: pointer;
     }
+=======
+>>>>>>> Stashed changes
 
     button{
         border-radius: 10px;

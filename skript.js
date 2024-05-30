@@ -69,6 +69,10 @@ function init () {
     });
 
 }
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 function solve () {
 
     for(i=0;i<9;i++)
@@ -363,6 +367,7 @@ function resetTime () {
     sec.innerHTML = "00"
     mins.innerHTML = "0:"
 }
+<<<<<<< Updated upstream
 function rotateLeft() {
 
 }
@@ -370,6 +375,8 @@ function rotateRight() {
 
 }
 
+=======
+>>>>>>> Stashed changes
 
 
 function shuffle() {
@@ -522,6 +529,10 @@ function stopTime () {
 
 }
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 let anims = document.getElementsByClassName('fbox')
     
 for(let i = 0; i < anims.length; i++){
@@ -531,9 +542,23 @@ for(let i = 0; i < anims.length; i++){
 }
 
 
+<<<<<<< Updated upstream
 
 
 
     
 
     
+=======
+document.addEventListener('DOMContentLoaded', () => {
+    const hoverSound = document.getElementById('hoverSound');
+
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(button => {
+        button.addEventListener('mouseover', () => {
+            hoverSound.currentTime = 0; // Rewind to start
+            hoverSound.play();
+        });
+    });
+});
+>>>>>>> Stashed changes

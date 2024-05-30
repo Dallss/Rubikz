@@ -1,0 +1,71 @@
+#canvas{
+  position: fixed;
+  left: 20%;
+  top: 20%;
+  width: 60vw;
+  height: 60vh;
+  border: 1px solid black;
+}
+
+/*fOr homepage*/
+
+body {
+  background-color: rgb(29, 42, 80);
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+  align-items: center;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0; /* Ensure no default margin */
+  cursor: url('Cursor.png'), auto;
+}
+a {
+  color: white;
+  text-decoration: none;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.container {
+  text-align: center;
+  cursor: url('Cursor.png'), auto;
+}
+.title {
+  margin-bottom: 30px;
+  animation: moveText 5s linear infinite; 
+}
+.title h1 {
+  font-size: 250px; 
+  margin: 0;
+}
+.menu {
+  display: flex;
+  flex-direction: column;
+}
+button {
+  background-color: #3c104f;
+  color: rgb(255, 250, 250);
+  font-size: 20px;
+  padding: 20px 30px;
+  margin-top: 20px;
+  border: 5px solid rgb(128, 126, 126);;
+  cursor: pointer;
+  border-radius: 25px;
+  width: fit-content; 
+  height: auto; 
+  align-self: center; 
+}
+
+button:hover {
+  background-color: lightgray;
+}
+
+.rubix {
+  cursor: url('Cursor.png'), auto;
+}
+
+.top-right {
+  position: absolute;
+  top: 10px; /* Adjust spacing as needed */
+  right: 10px; /* Adjust spacing as needed */
+}
+

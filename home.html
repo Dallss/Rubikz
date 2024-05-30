@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>RUBIKZ</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+    <div class = "top-right">
+        <button id="toggleSound">Turn Sound On</button>
+    </div>
+    <div class="container">
+        <div class="title">
+            <h1>RUBIKZ</h1>
+        </div>
+        <div>
+            <button id="play2d" class="rubix" onclick="location.href='2d.html'">Play 2D</button>
+        </div>
+        <div>
+            <button id="play3d" class="rubix" onclick="location.href='index.html'">Play 3D</button>
+        </div>
+        <div>
+            <button id="about" class="rubix" onclick="location.href='about.html'">ABOUT</button>
+        </div>
+    </div>
+    <audio id="song" autoplay muted>
+        <source src="Bakunawa.mp3" type="audio/mpeg">
+    </audio>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const audio = document.getElementById("song");
+            const button = document.getElementById("toggleSound");
+
+            button.addEventListener('click', () => {
+                if (audio.muted) {
+                    audio.muted = false;
+                    button.textContent = 'Sound Off';
+                } else {
+                    audio.muted = true;
+                    button.textContent = 'Sound On';
+                }
+
+                audio.play().catch(error => {
+                    console.error('Error playing the audio:', error);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
