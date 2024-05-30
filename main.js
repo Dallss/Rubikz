@@ -9,6 +9,7 @@ import { cameraPosition, instance, sqrt } from 'three/examples/jsm/nodes/Nodes.j
 //manual imports
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { degToRad, radToDeg } from 'three/src/math/MathUtils.js'
+import { PoissonDenoiseShader } from 'three/examples/jsm/shaders/PoissonDenoiseShader.js'
 
 
 //helper functions
@@ -19,7 +20,8 @@ function degreesToRadians(degrees) {
 
 //preps
 const scene = new THREE.Scene()
-const cam = new THREE.PerspectiveCamera(75, window.innerWidth/ window.innerHeight, .01, 1000) //(sixe of angle perspective, aspect ratio, view frustum n, viem frustum m )
+const cam = new THREE.PerspectiveCamera(75, window.innerWidth/ window.innerHeight, .01, 1000) 
+//(sixe of angle perspective, aspect ratio, view frustum n, viem frustum m )
 
 const renderer = new THREE.WebGLRenderer(
 {canvas: document.querySelector('#canvas'), }
@@ -53,6 +55,7 @@ scene.add(axesHelper)
 
 
 function init(){
+  let radiuscorner = Math.sqrt(5**2 + 5**2)
   
   window.piece = [];  // Declare piece as a global array
   for (let i = 0, x = -5; i < 3; i++, x += 5) {
@@ -62,131 +65,66 @@ function init(){
       for (let k = 0, z = -5; k < 3; k++, z += 5) {
         piece[i][j][k] = new THREE.Mesh(cubePiece, color)
         piece[i][j][k].position.set(x,y,z)
+
+        if(i==1 || j == 1 || k == 1){ piece[i][j][k].radius = 5} 
+        else{piece[i][j][k].radius = radiuscorner}
+
         scene.add(piece[i][j][k])
       }
     }
   }
-  let initx = piece[2][2][2].position.x
-  let initz = piece[2][2][2].position.z
-  let radiuscorner = Math.sqrt(Math.pow(initx,2)+Math.pow(initz,2))
   
-  for(let i=0; i<3; i++){
-    //y-edges init
-    piece[0][i][0].angleOnXZPlane = 225
-    piece[0][i][0].radius = radiuscorner
-
-    piece[0][i][2].angleOnXZPlane = 315
-    piece[0][i][2].radius = radiuscorner
-
-    piece[2][i][0].angleOnXZPlane = 135
-    piece[2][i][0].radius = radiuscorner
-
-    piece[2][i][2].angleOnXZPlane = 45
-    piece[2][i][2].radius = radiuscorner
-    
-
-    //y-sides init
-    piece[2][i][1].angleOnXZPlane = 90
-    piece[2][i][1].radius = 5
-
-    piece[1][i][0].angleOnXZPlane = 180
-    piece[1][i][0].radius = 5
-
-    piece[0][i][1].angleOnXZPlane = 270
-    piece[0][i][1].radius = 5
-
-    piece[1][i][2].angleOnXZPlane = 0
-    piece[1][i][2].radius = 5
-  }
-
-  for(let x=0; x<3; x++){
-    //x-edges init
-    piece[x][0][0].angleOnYZPlane = 225
-    piece[x][0][0].radius = radiuscorner
-
-    piece[x][0][2].angleOnYZPlane = 315
-    piece[x][0][2].radius = radiuscorner
-
-    piece[x][2][0].angleOnYZPlane = 135
-    piece[x][2][0].radius = radiuscorner
-
-    piece[x][2][2].angleOnYZPlane = 45
-    piece[x][2][2].radius = radiuscorner
-
-    //x-sides init
-    piece[x][2][1].angleOnYZPlane = 90
-    piece[x][2][1].radius = 5
-
-    piece[x][1][0].angleOnYZPlane = 180
-    piece[x][1][0].radius = 5
-
-    piece[x][0][1].angleOnYZPlane = 270
-    piece[x][0][1].radius = 5
-
-    piece[x][1][2].angleOnYZPlane = 0
-    piece[x][1][2].radius = 5
-  }
-
-  // for(let z=0; z<3; z++){
-  //   //z-edges init
-  //   piece[0][0][z].angleOnXYPlane = 225
-  //   piece[0][0][z].radius = radiuscorner
-    
-
-  //   piece[0][2][z].angleOnXYPlane = 315
-  //   piece[0][2][z].radius = radiuscorner
-
-  //   piece[2][0][z].angleOnXYPlane = 135
-  //   piece[2][0][z].radius = radiuscorner
-
-  //   piece[2][2][z].angleOnXYPlane = 45
-  //   piece[2][2][z].radius = radiuscorner
-    
-
-  //   //z-sides init
-  //   piece[2][1][z].angleOnXYPlane = 90
-  //   piece[2][1][z].radius = 5
-
-  //   piece[1][0][z].angleOnXYPlane = 180
-  //   piece[1][0][z].radius = 5
-
-  //   piece[0][1][z].angleOnXYPlane = 270
-  //   piece[0][1][z].radius = 5
-
-  //   piece[1][2][z].angleOnXYPlane = 0
-  //   piece[1][2][z].radius = 5
-  // }
  
 }
 
-//keep track of angle
-function rotateOnYAxis(piece,degrees){
+function getAngleOnXZPlane(piece){
+  let x = piece.position.x
+  let z = piece.position.z
+  return Math.atan2(z,x)
+}
+function getAngleOnXYPlane(piece){
+  let x = piece.position.x
+  let y = piece.position.y
+  return Math.atan2(x,y)
+}
+function getAngleOnZYPlane(piece){
+  let z = piece.position.z
+  let y = piece.position.y
+  return Math.atan2(y,z)
+}
 
-  let angle = piece.angleOnXZPlane
-  piece.position.x = piece.radius * Math.sin(degToRad(angle))
-  piece.position.z = piece.radius * Math.cos(degToRad(angle))
-  piece.rotation.y += degToRad(degrees)
-  piece.angleOnXZPlane += degrees
+function rotateOnYAxis(piece,degrees){
+  let radius = piece.radius 
+  let angle = getAngleOnXZPlane(piece) + degToRad(degrees)
+
+  piece.position.z = piece.radius * Math.sin(angle)
+  piece.position.x = piece.radius * Math.cos(angle)
+
+  piece.rotation.y -= degToRad(degrees)
   
 }
 
 function rotateOnXAxis(piece,degrees){
 
-  let angle = piece.angleOnYZPlane
-  piece.position.y = piece.radius * Math.cos(degToRad(angle))
-  piece.position.z = piece.radius * Math.sin(degToRad(angle))
-  piece.rotation.x += degToRad(degrees)
-  piece.angleOnYZPlane += degrees
+  let angle = getAngleOnZYPlane(piece) + degToRad(degrees)
+  
+  piece.position.z = piece.radius * Math.cos(angle)
+  piece.position.y = piece.radius * Math.sin(angle)
+
+  piece.rotation.x -= degToRad(degrees)
   
 }
 
 function rotateOnZAxis(piece,degrees){
 
-  let angle = piece.angleOnXYPlane
-  piece.position.x = piece.radius * Math.cos(degToRad(angle))
-  piece.position.y = piece.radius * Math.sin(degToRad(angle))
-  piece.rotation.z += degToRad(degrees)
-  piece.angleOnXYPlane += degrees
+
+  let angle = getAngleOnXYPlane(piece) + degToRad(degrees)
+
+  piece.position.y = piece.radius * Math.cos(angle)
+  piece.position.x = piece.radius * Math.sin(angle)
+
+  piece.rotation.z -= degToRad(degrees)
+
   
 }
 
@@ -200,7 +138,7 @@ function turnY(degrees, layer){ //ylayer 2= top, 0=bottom
     }
   }
   //mid
-  piece[1][ylayer][1].rotation.y += degToRad(degrees)
+  piece[1][layer][1].rotation.y -= degToRad(degrees)
 }
 
 function turnX(degrees, layer){
@@ -212,7 +150,8 @@ function turnX(degrees, layer){
     }
   }
   //mid
-  piece[layer][1][1].rotation.x += degToRad(degrees)
+  piece[layer][1][1].rotation.x -= degToRad(degrees)
+
 }
 
 function turnZ(degrees, layer){
@@ -224,7 +163,28 @@ function turnZ(degrees, layer){
     }
   }
   //mid
-  piece[1][1][layer].rotation.z += degToRad(degrees)
+  piece[1][1][layer].rotation.z -= degToRad(degrees)
+
+
+    let hold = piece[0][2][layer];
+
+    // Rotating the corners clockwise
+    piece[0][2][layer] = piece[2][2][layer];
+    piece[2][2][layer] = piece[2][0][layer];
+    piece[2][0][layer] = piece[0][0][layer];
+    piece[0][0][layer] = hold;
+  
+
+    // Save the initial edge piece
+    hold = piece[0][1][layer];
+
+    // Rotating the edges clockwise
+    piece[0][1][layer] = piece[1][0][layer];
+    piece[1][0][layer] = piece[2][1][layer];
+    piece[2][1][layer] = piece[1][2][layer];
+    piece[1][2][layer] = hold;
+
+  
 }
 
 let turning = 0
@@ -242,7 +202,7 @@ function animate (){
       case 'y2':
         turnY(vector, 2)
         break
-      case 'z0':
+      case 'z2':
         turnZ(vector, 2)
         break
     }
@@ -269,6 +229,24 @@ document.querySelector('#x2').addEventListener("click", (e)=>{
   if(turning == 0){
     turning = 90
     sidetoturn = 'x2'
+
+  }
+})
+
+document.querySelector('#y2').addEventListener("click", (e)=>{
+
+  if(turning == 0){
+    turning = 90
+    sidetoturn = 'y2'
+
+  }
+})
+
+document.querySelector('#z2').addEventListener("click", (e)=>{
+
+  if(turning == 0){
+    turning = 90
+    sidetoturn = 'z2'
 
   }
 })
