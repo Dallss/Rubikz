@@ -7,45 +7,50 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="style.css">
-
 </head>
-<body>
-    <div class = "top-right">
-        <button id="toggleSound">Turn Sound On</button>
+<body style="background-image: url('home.jpg'); background-size: cover; background-repeat: no-repeat; background-position: center;">
+    <div class="top-right">
+        <div id="toggleSound">
+            <img id="soundIcon" src="music-on.png" alt="Sound Icon">
+        </div>
     </div>
     <div class="container">
         <div class="title">
-            <h1>RUBIKZ</h1>
         </div>
-        <div>
+        <div class="button-container">
             <button id="play2d" class="rubix" onclick="location.href='2d.html'">Play 2D</button>
-        </div>
-        <div>
             <button id="play3d" class="rubix" onclick="location.href='index.html'">Play 3D</button>
-        </div>
-        <div>
             <button id="about" class="rubix" onclick="location.href='about.html'">ABOUT</button>
         </div>
     </div>
-    <audio id="song" autoplay muted>
+    <audio id="song" muted>
         <source src="Bakunawa.mp3" type="audio/mpeg">
     </audio>
     <script>
         window.addEventListener('DOMContentLoaded', () => {
             const audio = document.getElementById("song");
             const button = document.getElementById("toggleSound");
+            const soundIcon = document.getElementById("soundIcon");
+            const hoverSound = new Audio("hoverbg.mp3");
+            const play2DButton = document.getElementById("play2d");
 
             button.addEventListener('click', () => {
                 if (audio.muted) {
                     audio.muted = false;
-                    button.textContent = 'Sound Off';
+                    soundIcon.src = 'music-on.png';
                 } else {
                     audio.muted = true;
-                    button.textContent = 'Sound On';
+                    soundIcon.src = 'music-off.png';
                 }
 
                 audio.play().catch(error => {
                     console.error('Error playing the audio:', error);
+                });
+            });
+
+            play2DButton.addEventListener('click', () => {
+                hoverSound.play().catch(error => {
+                    console.error('Error playing the hover sound:', error);
                 });
             });
         });

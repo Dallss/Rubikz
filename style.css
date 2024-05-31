@@ -29,14 +29,6 @@ a {
   text-align: center;
   cursor: url('Cursor.png'), auto;
 }
-.title {
-  margin-bottom: 30px;
-  animation: moveText 5s linear infinite; 
-}
-.title h1 {
-  font-size: 250px; 
-  margin: 0;
-}
 .menu {
   display: flex;
   flex-direction: column;
@@ -55,17 +47,70 @@ button {
   align-self: center; 
 }
 
-button:hover {
-  background-color: lightgray;
-}
 
 .rubix {
-  cursor: url('Cursor.png'), auto;
+  padding: 10px 20px;
+  font-size: 40px;
+  cursor: pointer;
+  border: none; 
+  background-color: transparent;
+  color: white; 
+  font-family: 'Metronauts';
 }
+
+#soundIcon {
+  width: 150px; 
+  height: 150px; 
+  object-fit: contain;
+}
+
 
 .top-right {
   position: absolute;
-  top: 10px; /* Adjust spacing as needed */
-  right: 10px; /* Adjust spacing as needed */
+  top: 10px; 
+  right: 10px; 
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+body {
+  background-image: url('home.jpg');
+  background-size: cover; 
+  background-repeat: no-repeat; 
+  background-position: center; 
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0px; 
+  margin-bottom: -300px; 
+}
+
+#play2d:hover {
+  color: rgb(255, 239, 16); 
+  cursor: url('Cursor.png'), auto;
+}
+
+
+#play3d:hover {
+  color: rgb(255, 239, 16);
+  cursor: url('Cursor.png'), auto;
+}
+
+
+#about:hover {
+  color: rgb(255, 239, 16);
+  cursor: url('Cursor.png'), auto;
+}
+
+@font-face {
+  font-family: 'metronauts';
+  src: url('metronauts.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
 
