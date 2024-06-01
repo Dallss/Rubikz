@@ -69,6 +69,7 @@ function init () {
     });
 
 }
+
 function solve () {
 
     for(i=0;i<9;i++)
@@ -363,13 +364,6 @@ function resetTime () {
     sec.innerHTML = "00"
     mins.innerHTML = "0:"
 }
-function rotateLeft() {
-
-}
-function rotateRight() {
-
-}
-
 
 
 function shuffle() {
@@ -522,6 +516,7 @@ function stopTime () {
 
 }
 
+
 let anims = document.getElementsByClassName('fbox')
     
 for(let i = 0; i < anims.length; i++){
@@ -529,6 +524,7 @@ for(let i = 0; i < anims.length; i++){
     let randomy = -700 + Math.floor(Math.random() * 700)
     anims[i].style.transform = `translate(${randomx}px,${randomy}px)`
 }
+
 
 
 

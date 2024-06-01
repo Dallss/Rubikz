@@ -359,25 +359,6 @@ aside>button:hover{
 
 
 /* general */
-    #rotate-left-btn {
-        display: block;
-        margin: 0 auto; /* Center horizontally */
-        margin-top: 0px; /* Adjust the top margin as needed */
-        margin-bottom: 50px;
-        font-size: 24px; /* Adjust the font size for the arrow */
-        padding: 20px; /* Adjust padding for better appearance */
-        cursor: pointer;
-    }
-
-    #rotate-right-btn {
-        display: block;
-        margin: 0 auto; /* Center horizontally */
-        margin-top: 0px; /* Adjust the top margin as needed */
-        margin-bottom: 50px;
-        font-size: 24px; /* Adjust the font size for the arrow */
-        padding: 20px; /* Adjust padding for better appearance */
-        cursor: pointer;
-    }
 
     button{
         border-radius: 10px;
