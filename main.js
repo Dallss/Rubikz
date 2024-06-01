@@ -103,7 +103,6 @@ function rotateOnYAxis(piece,degrees){
   piece.rotation.y -= degToRad(degrees)
   
 }
-
 function rotateOnXAxis(piece,degrees){
 
   let angle = getAngleOnZYPlane(piece) + degToRad(degrees)
@@ -114,7 +113,6 @@ function rotateOnXAxis(piece,degrees){
   piece.rotation.x -= degToRad(degrees)
   
 }
-
 function rotateOnZAxis(piece,degrees){
 
 
@@ -140,7 +138,6 @@ function turnY(degrees, layer){ //ylayer 2= top, 0=bottom
   //mid
   piece[1][layer][1].rotation.y -= degToRad(degrees)
 }
-
 function turnX(degrees, layer){
   for(let i=0; i<3; i++){
     for(let j=0; j<3; j++){
@@ -153,7 +150,6 @@ function turnX(degrees, layer){
   piece[layer][1][1].rotation.x -= degToRad(degrees)
 
 }
-
 function turnZ(degrees, layer){
   for(let i=0; i<3; i++){
     for(let j=0; j<3; j++){
@@ -163,17 +159,19 @@ function turnZ(degrees, layer){
     }
   }
   //mid
-  piece[1][1][layer].rotation.z -= degToRad(degrees)
+  piece[1][1][layer].rotation.z -= degToRad(degrees)  
+}
 
 
-    let hold = piece[0][2][layer];
-
-    // Rotating the corners clockwise
-    piece[0][2][layer] = piece[2][2][layer];
-    piece[2][2][layer] = piece[2][0][layer];
-    piece[2][0][layer] = piece[0][0][layer];
-    piece[0][0][layer] = hold;
+function setZArray(direction, layer){
   
+  if(direction > 0){
+    let hold = piece[0][2][layer];  
+    // Rotating the corners clockwise
+    piece[0][2][layer] = piece[0][0][layer];
+    piece[0][0][layer] = piece[2][0][layer];
+    piece[2][0][layer] = piece[2][2][layer];
+    piece[2][2][layer] = hold;
 
     // Save the initial edge piece
     hold = piece[0][1][layer];
@@ -183,13 +181,58 @@ function turnZ(degrees, layer){
     piece[1][0][layer] = piece[2][1][layer];
     piece[2][1][layer] = piece[1][2][layer];
     piece[1][2][layer] = hold;
-
+  }
   
+  //for counter clockwise
 }
 
+function setXArray(direction, layer){
+
+  if (direction > 0) {
+    //Rotating the corners clockwise
+    let hold = piece[layer][0][0];  
+    piece[layer][0][0] = piece[layer][2][0];
+    piece[layer][2][0] = piece[layer][2][2];
+    piece[layer][2][2] = piece[layer][0][2];
+    piece[layer][0][2] = hold;
+
+    // Save the initial edge piece
+    hold = piece[layer][0][1];
+
+    // Rotating the edges clockwise
+    piece[layer][0][1] = piece[layer][1][0];
+    piece[layer][1][0] = piece[layer][2][1];
+    piece[layer][2][1] = piece[layer][1][2];
+    piece[layer][1][2] = hold;
+
+  }
+}
+
+function setYArray(direction, layer){
+ 
+  if (direction > 0) {
+    // Rotating the corners clockwise
+    let hold = piece[2][layer][2];  
+
+    piece[2][layer][2] = piece[2][layer][0];
+    piece[2][layer][0] = piece[0][layer][0];
+    piece[0][layer][0] = piece[0][layer][2];
+    piece[0][layer][2] = hold;
+
+    // Save the initial edge piece
+    hold = piece[1][layer][0];
+
+    // Rotating the edges clockwise
+    piece[1][layer][0] = piece[0][layer][1];
+    piece[0][layer][1] = piece[1][layer][2];
+    piece[1][layer][2] = piece[2][layer][1];
+    piece[2][layer][1] = hold;
+  
+  }
+}
 let turning = 0
 let sidetoturn = ''
-let vector = 1
+let vector = 2
 
 function animate (){
   requestAnimationFrame( animate )
@@ -197,16 +240,23 @@ function animate (){
   if(turning > 0){
     switch(sidetoturn){
       case 'x2':
+        console.log('turnx ran')
         turnX(vector, 2)
+        if(turning == vector){setXArray(vector, 2)}
         break
       case 'y2':
+        console.log('turny ran')
         turnY(vector, 2)
+        if(turning == vector){setYArray(vector, 2)}
         break
       case 'z2':
+        console.log('turnz ran')
         turnZ(vector, 2)
+        if(turning == vector){setZArray(vector, 2)}
         break
     }
-    turning -= 1
+    console.log(piece[2][2][2].rotation)
+    turning -= vector
   }
 
   renderer.render(scene, cam)
@@ -220,9 +270,6 @@ animate()
 
 
 //event listeners 0
-
-
-
 
 document.querySelector('#x2').addEventListener("click", (e)=>{
 
