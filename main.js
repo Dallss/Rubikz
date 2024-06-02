@@ -17,7 +17,9 @@ function degreesToRadians(degrees) {
   return degrees * (Math.PI / 180)
 }
 
-
+function distanceFromOrigin(x, y) {
+  return Math.sqrt(x * x + y * y);
+}
 //preps
 const scene = new THREE.Scene()
 const cam = new THREE.PerspectiveCamera(75, window.innerWidth/ window.innerHeight, .01, 1000) 
@@ -74,7 +76,7 @@ function init(){
     }
   }
   
- 
+ //
 }
 
 function getAngleOnXZPlane(piece){
@@ -94,34 +96,40 @@ function getAngleOnZYPlane(piece){
 }
 
 function rotateOnYAxis(piece,degrees){
-  let radius = piece.radius 
+  
+  let radius = distanceFromOrigin(piece.position.x, piece.position.z)
   let angle = getAngleOnXZPlane(piece) + degToRad(degrees)
 
-  piece.position.z = piece.radius * Math.sin(angle)
-  piece.position.x = piece.radius * Math.cos(angle)
+  piece.position.z = radius * Math.sin(angle)
+  piece.position.x = radius * Math.cos(angle)
 
-  piece.rotation.y -= degToRad(degrees)
+  const axis = new THREE.Vector3(0,1,0)
+  piece.rotateOnWorldAxis(axis,degToRad(-degrees))  
   
 }
 function rotateOnXAxis(piece,degrees){
 
+  let radius = distanceFromOrigin(piece.position.y, piece.position.z)
   let angle = getAngleOnZYPlane(piece) + degToRad(degrees)
   
-  piece.position.z = piece.radius * Math.cos(angle)
-  piece.position.y = piece.radius * Math.sin(angle)
+  piece.position.z = radius * Math.cos(angle)
+  piece.position.y = radius * Math.sin(angle)
 
-  piece.rotation.x -= degToRad(degrees)
+  const axis = new THREE.Vector3(1,0,0)
+  piece.rotateOnWorldAxis(axis,degToRad(-degrees))
   
 }
 function rotateOnZAxis(piece,degrees){
 
-
+  let radius = distanceFromOrigin(piece.position.x, piece.position.y)
   let angle = getAngleOnXYPlane(piece) + degToRad(degrees)
 
-  piece.position.y = piece.radius * Math.cos(angle)
-  piece.position.x = piece.radius * Math.sin(angle)
+  piece.position.y = radius * Math.cos(angle)
+  piece.position.x = radius * Math.sin(angle)
 
-  piece.rotation.z -= degToRad(degrees)
+  const axis = new THREE.Vector3(0,0,1)
+  piece.rotateOnWorldAxis(axis,degToRad(-degrees))
+  // piece.rotation.z -= degToRad(degrees)
 
   
 }
@@ -136,7 +144,8 @@ function turnY(degrees, layer){ //ylayer 2= top, 0=bottom
     }
   }
   //mid
-  piece[1][layer][1].rotation.y -= degToRad(degrees)
+  const axis = new THREE.Vector3(0,1,0)
+  piece[1][layer][1].rotateOnWorldAxis(axis,degToRad(-degrees))
 }
 function turnX(degrees, layer){
   for(let i=0; i<3; i++){
@@ -147,7 +156,8 @@ function turnX(degrees, layer){
     }
   }
   //mid
-  piece[layer][1][1].rotation.x -= degToRad(degrees)
+  const axis = new THREE.Vector3(1,0,0)
+  piece[layer][1][1].rotateOnWorldAxis(axis,degToRad(-degrees))
 
 }
 function turnZ(degrees, layer){
@@ -159,7 +169,8 @@ function turnZ(degrees, layer){
     }
   }
   //mid
-  piece[1][1][layer].rotation.z -= degToRad(degrees)  
+  const axis = new THREE.Vector3(0,0,1)
+  piece[1][1][layer].rotateOnWorldAxis(axis,degToRad(-degrees))
 }
 
 
@@ -185,7 +196,6 @@ function setZArray(direction, layer){
   
   //for counter clockwise
 }
-
 function setXArray(direction, layer){
 
   if (direction > 0) {
@@ -207,7 +217,6 @@ function setXArray(direction, layer){
 
   }
 }
-
 function setYArray(direction, layer){
  
   if (direction > 0) {
@@ -230,32 +239,90 @@ function setYArray(direction, layer){
   
   }
 }
+
+
+
 let turning = 0
 let sidetoturn = ''
 let vector = 2
+
+
 
 function animate (){
   requestAnimationFrame( animate )
   
   if(turning > 0){
     switch(sidetoturn){
+      case 'x0':
+        console.log('turnx ran')
+        turnX(vector, 0)
+        if(turning == vector){
+          setXArray(vector, 0)
+        }
+        break
+      case 'x1':
+        console.log('turnx ran')
+        turnX(vector, 1)
+        if(turning == vector){
+          setXArray(vector, 1)
+        }
+        break
       case 'x2':
         console.log('turnx ran')
         turnX(vector, 2)
-        if(turning == vector){setXArray(vector, 2)}
+        if(turning == vector){
+          setXArray(vector, 2)
+        }
         break
+      case 'y0':
+        console.log('turny ran')
+        turnY(vector, 0)
+        if(turning == vector){  
+          setYArray(vector, 0)
+        }
+        break
+
+      case 'y1':
+        console.log('turny ran')
+        turnY(vector, 1)
+        if(turning == vector){  
+          setYArray(vector, 1)
+        }
+        break
+      
       case 'y2':
         console.log('turny ran')
         turnY(vector, 2)
-        if(turning == vector){setYArray(vector, 2)}
+        if(turning == vector){  
+          setYArray(vector, 2)
+        }
         break
+      
+      case 'z0':
+        console.log('turnz ran')
+        turnZ(vector, 0)
+        if(turning == vector){
+          setZArray(vector, 0)
+        }
+        break
+
+      case 'z1':
+        console.log('turnz ran')
+        turnZ(vector, 1)
+        if(turning == vector){
+          setZArray(vector, 1)
+        }
+        break
+
       case 'z2':
         console.log('turnz ran')
         turnZ(vector, 2)
-        if(turning == vector){setZArray(vector, 2)}
+        if(turning == vector){
+          setZArray(vector, 2)
+        }
         break
     }
-    console.log(piece[2][2][2].rotation)
+    
     turning -= vector
   }
 
@@ -268,35 +335,73 @@ init()
 animate()
 
 
+function onKeydown(event){
 
-//event listeners 0
-
-document.querySelector('#x2').addEventListener("click", (e)=>{
-
-  if(turning == 0){
-    turning = 90
-    sidetoturn = 'x2'
-
+  console.log(event.keyCode)
+  switch(event.keyCode){
+    case 81:
+      if(turning<=0){
+        turning = 90
+        sidetoturn = 'x0'
+      }
+      break
+    case 87:
+      if(turning<=0){
+        turning = 90
+        sidetoturn = 'x1'
+      }
+      break
+    case 69:
+      if(turning<=0){
+        turning = 90
+        sidetoturn = 'x2'
+      }
+      break
+    case 80:
+      if(turning<=0){
+        turning = 90
+        sidetoturn = 'z0'
+      }
+      break
+    case 79:
+      if(turning<=0){
+        turning = 90
+        sidetoturn = 'z1'
+      }
+      break
+    case 73:
+      if(turning<=0){
+        turning = 90
+        sidetoturn = 'z2'
+      }
+      break
+    case 70:
+      if(turning<=0){
+        turning = 90
+        sidetoturn = 'y0'
+      }
+      break
+    case 71:
+      if(turning<=0){
+        turning = 90
+        sidetoturn = 'y1'
+      }
+      break
+    case 72:
+      if(turning<=0){
+        turning = 90
+        sidetoturn = 'y2'
+      }
+      break
   }
-})
+}
 
-document.querySelector('#y2').addEventListener("click", (e)=>{
+//event listeners 
+document.addEventListener('DOMContentLoaded', (event) => {
+  document.addEventListener('keydown', onKeydown);
+});
 
-  if(turning == 0){
-    turning = 90
-    sidetoturn = 'y2'
 
-  }
-})
-
-document.querySelector('#z2').addEventListener("click", (e)=>{
-
-  if(turning == 0){
-    turning = 90
-    sidetoturn = 'z2'
-
-  }
-})
 
 
 ///NOTESS: angle on axes should not be an attribute. should be derrived from xy values. 
