@@ -68,9 +68,6 @@ function init(){
         piece[i][j][k] = new THREE.Mesh(cubePiece, color)
         piece[i][j][k].position.set(x,y,z)
 
-        if(i==1 || j == 1 || k == 1){ piece[i][j][k].radius = 5} 
-        else{piece[i][j][k].radius = radiuscorner}
-
         scene.add(piece[i][j][k])
       }
     }
@@ -94,6 +91,8 @@ function getAngleOnZYPlane(piece){
   let y = piece.position.y
   return Math.atan2(y,z)
 }
+
+
 
 function rotateOnYAxis(piece,degrees){
   
@@ -130,9 +129,9 @@ function rotateOnZAxis(piece,degrees){
   const axis = new THREE.Vector3(0,0,1)
   piece.rotateOnWorldAxis(axis,degToRad(-degrees))
   // piece.rotation.z -= degToRad(degrees)
-
-  
 }
+
+
 
 function turnY(degrees, layer){ //ylayer 2= top, 0=bottom
 
@@ -174,6 +173,7 @@ function turnZ(degrees, layer){
 }
 
 
+
 function setZArray(direction, layer){
   
   if(direction > 0){
@@ -193,7 +193,23 @@ function setZArray(direction, layer){
     piece[2][1][layer] = piece[1][2][layer];
     piece[1][2][layer] = hold;
   }
-  
+  else {
+    let hold = piece[0][2][layer];
+    // Rotating the corners counterclockwise
+    piece[0][2][layer] = piece[2][2][layer];
+    piece[2][2][layer] = piece[2][0][layer];
+    piece[2][0][layer] = piece[0][0][layer];
+    piece[0][0][layer] = hold;
+
+    // Save the initial edge piece
+    hold = piece[0][1][layer];
+
+    // Rotating the edges counterclockwise
+    piece[0][1][layer] = piece[1][2][layer];
+    piece[1][2][layer] = piece[2][1][layer];
+    piece[2][1][layer] = piece[1][0][layer];
+    piece[1][0][layer] = hold;
+  }
   //for counter clockwise
 }
 function setXArray(direction, layer){
@@ -216,6 +232,23 @@ function setXArray(direction, layer){
     piece[layer][1][2] = hold;
 
   }
+  else {
+    // Rotating the corners counterclockwise
+    let hold = piece[layer][0][0];
+    piece[layer][0][0] = piece[layer][0][2];
+    piece[layer][0][2] = piece[layer][2][2];
+    piece[layer][2][2] = piece[layer][2][0];
+    piece[layer][2][0] = hold;
+
+    // Save the initial edge piece
+    hold = piece[layer][0][1];
+
+    // Rotating the edges counterclockwise
+    piece[layer][0][1] = piece[layer][1][2];
+    piece[layer][1][2] = piece[layer][2][1];
+    piece[layer][2][1] = piece[layer][1][0];
+    piece[layer][1][0] = hold;
+}
 }
 function setYArray(direction, layer){
  
@@ -236,15 +269,33 @@ function setYArray(direction, layer){
     piece[0][layer][1] = piece[1][layer][2];
     piece[1][layer][2] = piece[2][layer][1];
     piece[2][layer][1] = hold;
-  
   }
+  else{
+    // Rotating the corners counterclockwise
+    let hold = piece[2][layer][2];
+
+    piece[2][layer][2] = piece[0][layer][2];
+    piece[0][layer][2] = piece[0][layer][0];
+    piece[0][layer][0] = piece[2][layer][0];
+    piece[2][layer][0] = hold;
+
+    // Save the initial edge piece
+    hold = piece[1][layer][0];
+
+    // Rotating the edges counterclockwise
+    piece[1][layer][0] = piece[2][layer][1];
+    piece[2][layer][1] = piece[1][layer][2];
+    piece[1][layer][2] = piece[0][layer][1];
+    piece[0][layer][1] = hold;
+}
 }
 
 
 
 let turning = 0
 let sidetoturn = ''
-let vector = 2
+let speed = 3
+let vector = speed
 
 
 
@@ -256,28 +307,28 @@ function animate (){
       case 'x0':
         console.log('turnx ran')
         turnX(vector, 0)
-        if(turning == vector){
+        if(turning == Math.abs(vector)){
           setXArray(vector, 0)
         }
         break
       case 'x1':
         console.log('turnx ran')
         turnX(vector, 1)
-        if(turning == vector){
+        if(turning == Math.abs(vector)){
           setXArray(vector, 1)
         }
         break
       case 'x2':
         console.log('turnx ran')
         turnX(vector, 2)
-        if(turning == vector){
+        if(turning == Math.abs(vector)){
           setXArray(vector, 2)
         }
         break
       case 'y0':
         console.log('turny ran')
         turnY(vector, 0)
-        if(turning == vector){  
+        if(turning == Math.abs(vector)){  
           setYArray(vector, 0)
         }
         break
@@ -285,7 +336,7 @@ function animate (){
       case 'y1':
         console.log('turny ran')
         turnY(vector, 1)
-        if(turning == vector){  
+        if(turning == Math.abs(vector)){  
           setYArray(vector, 1)
         }
         break
@@ -293,7 +344,7 @@ function animate (){
       case 'y2':
         console.log('turny ran')
         turnY(vector, 2)
-        if(turning == vector){  
+        if(turning == Math.abs(vector)){  
           setYArray(vector, 2)
         }
         break
@@ -301,7 +352,7 @@ function animate (){
       case 'z0':
         console.log('turnz ran')
         turnZ(vector, 0)
-        if(turning == vector){
+        if(turning == Math.abs(vector)){
           setZArray(vector, 0)
         }
         break
@@ -309,7 +360,7 @@ function animate (){
       case 'z1':
         console.log('turnz ran')
         turnZ(vector, 1)
-        if(turning == vector){
+        if(turning == Math.abs(vector)){
           setZArray(vector, 1)
         }
         break
@@ -317,13 +368,13 @@ function animate (){
       case 'z2':
         console.log('turnz ran')
         turnZ(vector, 2)
-        if(turning == vector){
+        if(turning == Math.abs(vector)){
           setZArray(vector, 2)
         }
         break
     }
     
-    turning -= vector
+    turning -= Math.abs(vector)
   }
 
   renderer.render(scene, cam)
@@ -335,14 +386,19 @@ init()
 animate()
 
 
+
+//cont
 function onKeydown(event){
 
-  console.log(event.keyCode)
+  
+  console.log(event)
+  vector = event.shiftKey ? speed * -1 : speed;
+
   switch(event.keyCode){
     case 81:
       if(turning<=0){
         turning = 90
-        sidetoturn = 'x0'
+        sidetoturn = 'x0'  
       }
       break
     case 87:
@@ -401,7 +457,3 @@ document.addEventListener('DOMContentLoaded', (event) => {
   document.addEventListener('keydown', onKeydown);
 });
 
-
-
-
-///NOTESS: angle on axes should not be an attribute. should be derrived from xy values. 
