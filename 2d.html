@@ -4,7 +4,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>rubikz</title>
+        <title>RUBIKS 2D</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="seess.css">
@@ -13,14 +13,16 @@
     
     <body>
 
-        <header>RUBIKZ</header>
-
+        <!-- <header>RUBIKZ</header> -->
+        <div class="title">
+            <img class="logo" src="./logo.png" alt="">
+          </div>
         <div id="game-space">
             
             <aside>
 
                 <div id="highs">
-                    <div id="scoreheds" style="text-align: center;">Top Records</div>
+                    <div id="scoreheds" style="font-family: Arial, Helvetica, sans-serif; font-size: small; font-weight: bold; text-align: center;">BEST TIMES</div>
                     <div id="list"></div>
 
                 </div>
@@ -30,7 +32,7 @@
                     <div id="seconds">00</div>
                 </div>
 
-                <button id="timer"> Start Time!</button>
+                <button id="timer"> Start Time</button>
                 
                 <button id="reset" onclick= "shuffle(), resetTime()"> Reset </button><!-- resets timer and shuffles cube -->
     
@@ -150,7 +152,7 @@
         </div> 
 
         <!-- Background animations -->
-        <span class="fbox x o a"></span>
+        <!-- <span class="fbox x o a"></span>
         <span class="fbox x o b"></span>
         <span class="fbox x o c"></span>
         <span class="fbox x o d"></span>
@@ -181,7 +183,7 @@
         <span class="fbox z p g"></span>
         <span class="fbox z p h"></span>
         <span class="fbox z p i"></span>
-        <span class="fbox z p j"></span>
+        <span class="fbox z p j"></span> -->
 
 
 

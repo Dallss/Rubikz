@@ -4,110 +4,92 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<<<<<<< HEAD
     <title>RUBIKZ 3D</title>
-=======
-    <title>3dplay</title>
-
->>>>>>> 1796a1f5ef60a673447713ba59ed3ccb1e0e8af7
     <style>
       body{
         display: flex;
         flex-direction: column;
-<<<<<<< HEAD
         width: 100%;
         height: 100%;
         margin: 0;
       }
       .container{
-        display: flex;
-        flex-direction: column;
         height: 100vh;
-        background-color:  rgb(29, 42, 80);
+        /* background-color: rgb(56, 56, 130); */
+        background-image: url(./bg.png);
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+        display: flex;
         justify-content: center;
         align-items: center;
+        flex-direction: column;
+      }
+      .cubespace{
+        border-radius: 10px;
+        border: 5px solid white;
+        margin-top: 20px;
+        margin-bottom: 20px;
       }
       .title{
         color: white;
         font-family: Arial, Helvetica, sans-serif;
-        font-weight: bold;
         font-size: xx-large;
+        font-weight: bold;
       }
       button{
+        border-radius: 10px;
         width: 30px;
         height: 30px;
-        border-radius: 10px;
+        margin: 1px;
+        padding: 1px;
         font-weight: bold;
+        /* border: 1px solid black; */
       }
-      .f:hover{
+      .rotate{
+        width: 100px;
+        height: 100px;
+        /* border: 3px solid blue; */
+      }
+      button:hover{
         background-color: rgb(56, 56, 130);
+        color: white;
       }
-      #canvas{
-        border-radius: 10px;
-        margin-top: 20px;
-        margin-bottom: 20px;
-        /* left: 20%;
-        top: 20%;
-        width: 100vw;
-        height: 60vh; */
-        border: 1px solid white;
-        border-width: thick;
-        width: 300px;
-        height: auto;
+      .title{
+        height: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .title img{
+        max-width: 100%;
+        max-height: 100%;
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <div class="title">RUBIKZ 3D</div>
-      <canvas id="canvas"></canvas>
+      <div class="title">
+        <img class="logo" src="./logo.png" alt="">
+      </div>
+      <canvas class="cubespace" id="canvas"></canvas>
       <div class="buttons">
-        <button class="f" id="rotbutt">F</button>
-        <button class="r">R</button>
-        <button class="u">U</button>
-        <button class="b">B</button>
-        <button class="l">L</button>
-        <button class="d">D</button>
+        <button class="f" id="Front">F</button>
+        <button class="r">R </button>
+        <button class="u">U </button>
+        <button class="b">B </button>
+        <button class="l">L </button>
+        <button class="d">D </button>
+        <br>
+        <button class="fp" id="Front Reverse">F'</button>
+        <button class="rp">R' </button>
+        <button class="up">U' </button>
+        <button class="bp">B' </button>
+        <button class="lp">L' </button>
+        <button class="dp">D' </button>
       </div>
-      <div>
-        <button class="fp" id="">F'</button>
-        <button class="rp">R'</button>
-        <button class="up">U'</button>
-        <button class="bp">B'</button>
-        <button class="lp">L'</button>
-        <button class="dp">D'</button>
-      </div>
-  
-      <script type="module" src="/main2.js"></script>
     </div>
-=======
-      }
-      .buttons{
-        width: 800px;
-        height: 600px;
-        border: 1px solid black;
-      }
-      .rotate{
-        width: 100px;
-        height: 100px;
-        border: 3px solid blue;
-      }
-      .rotate:hover{
-        background-color: rgb(56, 56, 130);
-      }
-    </style>
-  </head>
-  <body>
-    <canvas id="canvas">
 
-    </canvas>
-    <div class="buttons">
-      <button class="rotate" id="rotbutt"></button>
-    </div>
-    <div class="buttons">
-      <button class="rotate" id="rotbutt"></button>
-    </div>
-    <script type="module" src="/main.js"></script>
->>>>>>> 1796a1f5ef60a673447713ba59ed3ccb1e0e8af7
+    <script type="module" src="/main2.js"></script>
   </body>
 </html>

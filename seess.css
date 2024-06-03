@@ -108,18 +108,38 @@ header{
     align-items: center;
 }
 
+.title{
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.title img{
+max-width: 100%;
+max-height: 100%;
+}
+
 body{
-    background: radial-gradient(circle at 0% 100%, rgb(3, 3, 52), rgb(30, 24, 95) 60%, rgb(20, 17, 49) 80%,rgb(3, 3, 29) 99%);
+    /* background: radial-gradient(circle at 0% 100%, rgb(3, 3, 52), rgb(30, 24, 95) 60%, rgb(20, 17, 49) 80%,rgb(3, 3, 29) 99%); */
+    display: flex;
+    background-image: url(./bg.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
     width: 100vw;
     margin: 0; 
     padding: 0;
-    height: 1000px;
+    height: 100vh;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 #game-space{
-    border: 1px solid black;
+    /* border: 1px solid black; */
     margin: 0 auto;
-    margin-top: 5%;
+    margin-top: 10px;
     width: 700px;
     height: 500px;
     display: flex;
@@ -147,8 +167,8 @@ aside>div>#list{
     background-color: rgb(4, 4, 45);
 }
 aside>div>*{
-    padding-top:10px;
-    padding-left: 1vw;
+    padding-top:15px;
+    /* padding-left: 1vw; */
 }
 aside>button{
     margin: 8px;;
@@ -266,7 +286,7 @@ aside>button:hover{
         opacity: 50%;
     }
     #main-cube>*{
-        border: 1px solid black;
+        /* border: 1px solid black; */
         border-radius: 5px;
         margin: 2px;
     }
@@ -331,7 +351,7 @@ aside>button:hover{
         scale: 1.1;
     }
     #right>:last-child>.view>*{
-        border: 1px solid black;
+        /* border: 1px solid black; */
         border-radius: 5px;
         margin: 2px;
     }
@@ -352,7 +372,7 @@ aside>button:hover{
         scale: 1.1;
     }
     #bottom>:last-child>.view>*{
-        border: 1px solid black;
+        /* border: 1px solid black; */
         border-radius: 5px;
         margin: 2px;
     }

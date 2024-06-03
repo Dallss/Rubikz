@@ -1,7 +1,7 @@
-import './style.css'
-import javascriptLogo from './javascript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.js'
+// import './style.css'
+// import javascriptLogo from './javascript.svg'
+// import viteLogo from '/vite.svg'
+// import { setupCounter } from './counter.js'
 
 import * as THREE from 'three'
 import { cameraPosition, instance, sqrt } from 'three/examples/jsm/nodes/Nodes.js'
@@ -316,32 +316,37 @@ document.addEventListener("DOMContentLoaded", () => {
           case 'rp':
             console.log('Case: Right face inverse rotation');
             turnby = -90;
-            ylayer = 1; // Example value for right face inverse
+            ylayer = 0; // Example value for right face inverse
             degreesTurnPerAnim = -1;
+            sidetoturn = 'x';
             break;
           case 'up':
             console.log('Case: Up face inverse rotation');
             turnby = -90;
             ylayer = 2; // Example value for up face inverse
             degreesTurnPerAnim = -1;
+            sidetoturn = 'y';
             break;
           case 'bp':
             console.log('Case: Back face inverse rotation');
             turnby = -90;
-            ylayer = 0; // Example value for back face inverse
-            degreesTurnPerAnim = 1;
+            ylayer = 2; // Example value for back face inverse
+            degreesTurnPerAnim = -1;
+            sidetoturn = 'z';
             break;
           case 'lp':
             console.log('Case: Left face inverse rotation');
             turnby = -90;
-            ylayer = 1; // Example value for left face inverse
-            degreesTurnPerAnim = 1;
+            ylayer = 2; // Example value for left face inverse
+            degreesTurnPerAnim = -1;
+            sidetoturn = 'x';
             break;
           case 'dp':
             console.log('Case: Down face inverse rotation');
             turnby = -90;
-            ylayer = 2; // Example value for down face inverse
-            degreesTurnPerAnim = 1;
+            ylayer = 0; // Example value for down face inverse
+            degreesTurnPerAnim = -1;
+            sidetoturn = 'y';
             break;
           default:
             console.log('Unknown button pressed');

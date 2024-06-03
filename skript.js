@@ -509,7 +509,7 @@ function stopTime () {
 
     console.log('stop Time was called')
 
-    strop.innerHTML = 'start'
+    strop.innerHTML = 'Start Time'
     strop.addEventListener('click', startTime)
 
     clearInterval(timerId) 
