@@ -10,6 +10,13 @@ window.onload = init;
 let sec = document.getElementById('seconds')
 let mins = document.getElementById('mins')
 let timerId 
+clearLeaderboard()
+init()
+
+function clearLeaderboard() {
+    localStorage.removeItem('leaderboard');
+}
+
 
 let strop = document.getElementById('timer')
 const reset = document.getElementById('reset')
@@ -17,14 +24,17 @@ const solb = document.getElementById('solve')
 
 solb.addEventListener('click',solve)
 reset.addEventListener('click', shuffle)
-strop.addEventListener('click', startTime)
+strop.addEventListener('click', toggleTime)
 
     
 
 const time = {
     seconds: 0,
-    minutes: 0
+    minutes: 0,
+    running: false // Track if the timer is running
+
 }
+
 function init () {
     console.log('onload executed');
 
@@ -68,30 +78,6 @@ function init () {
         div.style.backgroundColor = bottom[index];
     });
 
-}
-
-function solve () {
-
-    for(i=0;i<9;i++)
-        face[i] = 'yellow';
-    
-    for(i=0;i<9;i++)
-        left[i] = 'orange';
-    
-    for(i=0;i<9;i++)
-        right[i] = 'red';
-    
-    for(i=0;i<9;i++)
-        tp[i] = 'green';
-    
-    for(i=0;i<9;i++)
-        bottom[i] = 'blue';
-    
-    for(i=0;i<9;i++)
-        back[i] = 'white';
-    
-    stopTime ();
-    init();
 }
 
 function turnTop (tru) {
@@ -166,6 +152,11 @@ function turnTop (tru) {
     console.log(face[0],left[0],back[0], right[0]);
     init();
 
+    // Check if the cube is solved and stop the timer if it is
+    if (isCubeSolved()) {
+        solve();
+    }
+
 }
 function turnMid (tru){
     const hold = [face[3],face[4],face[5]]
@@ -228,7 +219,13 @@ function turnBot (tru){
 
     }
     
+    
     init();
+
+    // Check if the cube is solved and stop the timer if it is
+    if (isCubeSolved()) {
+        solve();
+    }
 }
 function turnLeft (tru){
     const hold = [face[0],face[3],face[6]]
@@ -270,6 +267,11 @@ function turnLeft (tru){
         left[1] = hol;
 
     }
+
+    // Check if the cube is solved and stop the timer if it is
+    if (isCubeSolved()) {
+        solve();
+    }
     init();
 }
 
@@ -288,6 +290,11 @@ function turnCenter (tru){
         bottom[1] = back[1]; bottom[4] = back[4]; bottom[7] = back[7];
         back[1] = tp[1]; back[4] = tp[4]; back[7] = tp[7];
         tp[1] = hold[0]; tp[4] = hold[1]; tp[7] = hold[2];
+    }
+
+    // Check if the cube is solved and stop the timer if it is
+    if (isCubeSolved()) {
+        solve();
     }
     init();
 }
@@ -332,32 +339,63 @@ function turnRight (tru){
         right[7] = right[5];
         right[5] = hol;
     }
+
+    // Check if the cube is solved and stop the timer if it is
+    if (isCubeSolved()) {
+        solve();
+    }
     init();
 }
 function faceLeft (){
     turnTop(true);
     turnMid(true);
     turnBot(true);
+
+    // Check if the cube is solved and stop the timer if it is
+    if (isCubeSolved()) {
+        solve();
+    }
 }
 function faceRight (){
     turnTop(false);
     turnMid(false);
     turnBot(false);
+
+    // Check if the cube is solved and stop the timer if it is
+    if (isCubeSolved()) {
+        solve();
+    }
 }
 function faceTop (){
     turnCenter(true);
     turnRight(true);
     turnLeft(true);
+
+    // Check if the cube is solved and stop the timer if it is
+    if (isCubeSolved()) {
+        solve();
+    }
 }
 function faceBot (){
     turnCenter(false);
     turnRight(false);
     turnLeft(false);
+
+    // Check if the cube is solved and stop the timer if it is
+    if (isCubeSolved()) {
+        solve();
+    }
 }
 function faceBack () {
     faceRight();
     faceRight();
+
+    // Check if the cube is solved and stop the timer if it is
+    if (isCubeSolved()) {
+        solve();
+    }
 }
+
 function resetTime () {
     time.seconds = 0;
     time.minutes = 0;
@@ -479,14 +517,22 @@ function shuffle() {
     init();
 }
 
+function toggleTime () {
+    if (time.running) {
+        stopTime();
+    } else {
+        startTime();
+    }
+}
+
 function startTime () {
     
     console.log('starttiem called')
     
     strop.innerHTML = 'Stop'
+    time.running = true
 
     timerId = setInterval(() => {
-
         time.seconds++;
         if(time.seconds > 59){
             time.seconds = 0;
@@ -501,22 +547,115 @@ function startTime () {
 
     }, 1000);
 
-    strop.removeEventListener('click', startTime)
-    strop.addEventListener('click', stopTime)
+    // strop.removeEventListener('click', startTime)
+    // strop.addEventListener('click', stopTime)
 
 }
+
+
+function isCubeSolved() {
+    const faces = [face, left, right, tp, bottom, back];
+    return faces.every(face => face.every(color => color === face[0]));
+
+}
+
+function solve () {
+
+    for(i=0;i<9;i++)
+        face[i] = 'yellow';
+    
+    for(i=0;i<9;i++)
+        left[i] = 'orange';
+    
+    for(i=0;i<9;i++)
+        right[i] = 'red';
+    
+    for(i=0;i<9;i++)
+        tp[i] = 'green';
+    
+    for(i=0;i<9;i++)
+        bottom[i] = 'blue';
+    
+    for(i=0;i<9;i++)
+        back[i] = 'white';
+    
+    
+    // Capture the current score
+    const currentScore = `${time.minutes}:${time.seconds < 10 ? '0' : ''}${time.seconds}`;
+    console.log('Current Score:', currentScore);
+
+    if (currentScore !== '0:00') {
+        // Save the score to the leaderboard
+        saveScore(currentScore);
+
+        // Display the leaderboard
+        displayLeaderboard();
+    }
+
+    stopTime ();
+    init();
+    resetTime();
+}
+
 function stopTime () {
 
     console.log('stop Time was called')
 
     strop.innerHTML = 'Start Time'
-    strop.addEventListener('click', startTime)
+    time.running = false;
 
     clearInterval(timerId) 
+    
 
 }
 
+//for leaderboard
+function saveScore(score) {
 
+    const leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+    
+    // avoid time duplication in leader board
+    const existingScore = leaderboard.some(entry => entry.score === score);
+    if (!existingScore) {
+        leaderboard.push({ name: "",score }); // Replace "Anonymous" with your actual method of getting a name if applicable
+    }
+
+    leaderboard.sort((a, b) => {
+        const [aMinutes, aSeconds] = a.score.split(':').map(Number);
+        const [bMinutes, bSeconds] = b.score.split(':').map(Number);
+        return aMinutes === bMinutes ? aSeconds - bSeconds : aMinutes - bMinutes;
+    });
+
+    localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+}
+
+function displayLeaderboard() {
+    const leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+    
+    // Sort the leaderboard entries based on score (time)
+    leaderboard.sort((a, b) => a.score - b.score);
+
+    // Select the top 10 entries or less if the leaderboard has fewer than 10 entries
+    const topEntries = leaderboard.slice(0, Math.min(leaderboard.length, 5));
+    
+    const listElement = document.getElementById('board');
+    listElement.innerHTML = '';
+
+    topEntries.forEach((entry, index) => {
+        const listItem = document.createElement('div');
+        listItem.textContent = `${index + 1}. ${entry.score}`;
+        listElement.appendChild(listItem);
+    });
+}
+
+
+document.querySelectorAll('.fbox').forEach(anims => {
+    let randomx = -700 + Math.floor(Math.random() * 700);
+    let randomy = -700 + Math.floor(Math.random() * 700);
+    anims.style.transform = `translate(${randomx}px,${randomy}px)`;
+});
+
+    
 let anims = document.getElementsByClassName('fbox')
     
 for(let i = 0; i < anims.length; i++){
@@ -524,12 +663,3 @@ for(let i = 0; i < anims.length; i++){
     let randomy = -700 + Math.floor(Math.random() * 700)
     anims[i].style.transform = `translate(${randomx}px,${randomy}px)`
 }
-
-
-
-
-
-
-    
-
-    

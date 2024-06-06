@@ -166,6 +166,7 @@ aside>div{
 aside>div>#list{
     background-color: rgb(4, 4, 45);
 }
+
 aside>div>*{
     padding-top:15px;
     /* padding-left: 1vw; */
@@ -445,6 +446,7 @@ aside>button:hover{
             width: 100%;
         }
     }
+
 
 
     
