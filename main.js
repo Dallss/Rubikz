@@ -302,6 +302,14 @@ class Cube{
   }
   }
 
+
+  rotateCubeXClockwise(){
+    this.turnX(90,0)
+    this.turnX(90,1)
+    this.turnX(90,2)
+  }
+
+
 }
 
 
@@ -320,25 +328,30 @@ class Cube{
 
 
 
+let myCube = new Cube(scene);
+
+
+let c1 = myCube
+c1.rotateCubeXClockwise()
+
+function isAcceptedState(cube){
 
 
 
-
-
-
-// function isAcceptedState(){
-
-
-//   for (let i = 0, x = -5; i < 3; i++, x += 5) {
-//     for (let j = 0, y = -5; j < 3; j++, y += 5) {
-//       for (let k = 0, z = -5; k < 3; k++, z += 5) {
-//         if(cubeFrame[i][j][k] != piece[i][j][k])
-//           return false
-//       }
-//     }
-//   }
-//   return true
-// }
+  for(let i=0; i<4; i++){
+    for (let i = 0, x = -5; i < 3; i++, x += 5) {
+      for (let j = 0, y = -5; j < 3; j++, y += 5) {
+        for (let k = 0, z = -5; k < 3; k++, z += 5) {
+          if(cube.cubeFrame[i][j][k] != c1.piece[i][j][k])
+            return false
+        }
+      }
+    }
+    c1.rotateCubeXClockwise()
+  }
+  
+  return true
+}
 
 
 
@@ -346,8 +359,9 @@ class Cube{
 
 
 function animate (cube){
-  requestAnimationFrame( animate )
+  requestAnimationFrame(() => animate(cube));
   
+  console.log(isAcceptedState(cube))
   if(turning > 0){
     switch(sidetoturn){
       case 'x0':
@@ -434,9 +448,10 @@ let turning = 0
 let sidetoturn = ''
 let speed = 3
 let vector = speed
-let rubikz = new Cube(scene)
 
-animate(rubikz)
+
+
+animate(myCube);
 
 
 
