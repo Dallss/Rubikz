@@ -59,21 +59,30 @@ scene.add(axesHelper)
 function init(){
   let radiuscorner = Math.sqrt(5**2 + 5**2)
   
-  window.piece = [];  // Declare piece as a global array
-  for (let i = 0, x = -5; i < 3; i++, x += 5) {
-    piece[i] = []
-    for (let j = 0, y = -5; j < 3; j++, y += 5) {
-      piece[i][j] = []
-      for (let k = 0, z = -5; k < 3; k++, z += 5) {
-        piece[i][j][k] = new THREE.Mesh(cubePiece, color)
-        piece[i][j][k].position.set(x,y,z)
+    //I needed something to identify each and indivual piece to know the cube's state [solved, not]
+    // So I used its solved state coordinate [i][j][k] and made a separate 3d array for the frame that the move functions
 
-        scene.add(piece[i][j][k])
+    window.piece = [];  // Declare piece as a global array
+    window.cubeFrame = [];
+
+    for (let i = 0, x = -5; i < 3; i++, x += 5) {
+      piece[i] = []
+      cubeFrame [i] = []
+
+      for (let j = 0, y = -5; j < 3; j++, y += 5) {
+
+        piece[i][j] = []
+        cubeFrame[i][j] = []
+        for (let k = 0, z = -5; k < 3; k++, z += 5) {
+
+          piece[i][j][k] = new THREE.Mesh(cubePiece, color)
+          piece[i][j][k].position.set(x,y,z)
+          scene.add(piece[i][j][k])
+
+          cubeFrame[i][j][k] = piece[i][j][k]
+        }
       }
     }
-  }
-  
- //
 }
 
 function getAngleOnXZPlane(piece){
@@ -133,30 +142,34 @@ function rotateOnZAxis(piece,degrees){
 
 
 
+
+
+
+
 function turnY(degrees, layer){ //ylayer 2= top, 0=bottom
 
   for(let i=0; i<3; i++){
     for(let j=0; j<3; j++){
       if(i == 1 && j == 1)
         continue
-      rotateOnYAxis(piece[i][layer][j],degrees)
+      rotateOnYAxis(cubeFrame[i][layer][j],degrees)
     }
   }
   //mid
   const axis = new THREE.Vector3(0,1,0)
-  piece[1][layer][1].rotateOnWorldAxis(axis,degToRad(-degrees))
+  cubeFrame[1][layer][1].rotateOnWorldAxis(axis,degToRad(-degrees))
 }
 function turnX(degrees, layer){
   for(let i=0; i<3; i++){
     for(let j=0; j<3; j++){
       if(i == 1 && j == 1)
         continue
-      rotateOnXAxis(piece[layer][i][j],degrees)
+      rotateOnXAxis(cubeFrame[layer][i][j],degrees)
     }
   }
   //mid
   const axis = new THREE.Vector3(1,0,0)
-  piece[layer][1][1].rotateOnWorldAxis(axis,degToRad(-degrees))
+  cubeFrame[layer][1][1].rotateOnWorldAxis(axis,degToRad(-degrees))
 
 }
 function turnZ(degrees, layer){
@@ -164,12 +177,12 @@ function turnZ(degrees, layer){
     for(let j=0; j<3; j++){
       if(i == 1 && j == 1)
         continue
-      rotateOnZAxis(piece[j][i][layer],degrees)
+      rotateOnZAxis(cubeFrame[j][i][layer],degrees)
     }
   }
   //mid
   const axis = new THREE.Vector3(0,0,1)
-  piece[1][1][layer].rotateOnWorldAxis(axis,degToRad(-degrees))
+  cubeFrame[1][1][layer].rotateOnWorldAxis(axis,degToRad(-degrees))
 }
 
 
@@ -177,38 +190,38 @@ function turnZ(degrees, layer){
 function setZArray(direction, layer){
   
   if(direction > 0){
-    let hold = piece[0][2][layer];  
+    let hold = cubeFrame[0][2][layer];  
     // Rotating the corners clockwise
-    piece[0][2][layer] = piece[0][0][layer];
-    piece[0][0][layer] = piece[2][0][layer];
-    piece[2][0][layer] = piece[2][2][layer];
-    piece[2][2][layer] = hold;
+    cubeFrame[0][2][layer] = cubeFrame[0][0][layer];
+    cubeFrame[0][0][layer] = cubeFrame[2][0][layer];
+    cubeFrame[2][0][layer] = cubeFrame[2][2][layer];
+    cubeFrame[2][2][layer] = hold;
 
-    // Save the initial edge piece
-    hold = piece[0][1][layer];
+    // Save the initial edge cubeFrame
+    hold = cubeFrame[0][1][layer];
 
     // Rotating the edges clockwise
-    piece[0][1][layer] = piece[1][0][layer];
-    piece[1][0][layer] = piece[2][1][layer];
-    piece[2][1][layer] = piece[1][2][layer];
-    piece[1][2][layer] = hold;
+    cubeFrame[0][1][layer] = cubeFrame[1][0][layer];
+    cubeFrame[1][0][layer] = cubeFrame[2][1][layer];
+    cubeFrame[2][1][layer] = cubeFrame[1][2][layer];
+    cubeFrame[1][2][layer] = hold;
   }
   else {
-    let hold = piece[0][2][layer];
+    let hold = cubeFrame[0][2][layer];
     // Rotating the corners counterclockwise
-    piece[0][2][layer] = piece[2][2][layer];
-    piece[2][2][layer] = piece[2][0][layer];
-    piece[2][0][layer] = piece[0][0][layer];
-    piece[0][0][layer] = hold;
+    cubeFrame[0][2][layer] = cubeFrame[2][2][layer];
+    cubeFrame[2][2][layer] = cubeFrame[2][0][layer];
+    cubeFrame[2][0][layer] = cubeFrame[0][0][layer];
+    cubeFrame[0][0][layer] = hold;
 
-    // Save the initial edge piece
-    hold = piece[0][1][layer];
+    // Save the initial edge cubeFrame
+    hold = cubeFrame[0][1][layer];
 
     // Rotating the edges counterclockwise
-    piece[0][1][layer] = piece[1][2][layer];
-    piece[1][2][layer] = piece[2][1][layer];
-    piece[2][1][layer] = piece[1][0][layer];
-    piece[1][0][layer] = hold;
+    cubeFrame[0][1][layer] = cubeFrame[1][2][layer];
+    cubeFrame[1][2][layer] = cubeFrame[2][1][layer];
+    cubeFrame[2][1][layer] = cubeFrame[1][0][layer];
+    cubeFrame[1][0][layer] = hold;
   }
   //for counter clockwise
 }
@@ -216,80 +229,79 @@ function setXArray(direction, layer){
 
   if (direction > 0) {
     //Rotating the corners clockwise
-    let hold = piece[layer][0][0];  
-    piece[layer][0][0] = piece[layer][2][0];
-    piece[layer][2][0] = piece[layer][2][2];
-    piece[layer][2][2] = piece[layer][0][2];
-    piece[layer][0][2] = hold;
+    let hold = cubeFrame[layer][0][0];  
+    cubeFrame[layer][0][0] = cubeFrame[layer][2][0];
+    cubeFrame[layer][2][0] = cubeFrame[layer][2][2];
+    cubeFrame[layer][2][2] = cubeFrame[layer][0][2];
+    cubeFrame[layer][0][2] = hold;
 
-    // Save the initial edge piece
-    hold = piece[layer][0][1];
+    // Save the initial edge cubeFrame
+    hold = cubeFrame[layer][0][1];
 
     // Rotating the edges clockwise
-    piece[layer][0][1] = piece[layer][1][0];
-    piece[layer][1][0] = piece[layer][2][1];
-    piece[layer][2][1] = piece[layer][1][2];
-    piece[layer][1][2] = hold;
+    cubeFrame[layer][0][1] = cubeFrame[layer][1][0];
+    cubeFrame[layer][1][0] = cubeFrame[layer][2][1];
+    cubeFrame[layer][2][1] = cubeFrame[layer][1][2];
+    cubeFrame[layer][1][2] = hold;
 
   }
   else {
     // Rotating the corners counterclockwise
-    let hold = piece[layer][0][0];
-    piece[layer][0][0] = piece[layer][0][2];
-    piece[layer][0][2] = piece[layer][2][2];
-    piece[layer][2][2] = piece[layer][2][0];
-    piece[layer][2][0] = hold;
+    let hold = cubeFrame[layer][0][0];
+    cubeFrame[layer][0][0] = cubeFrame[layer][0][2];
+    cubeFrame[layer][0][2] = cubeFrame[layer][2][2];
+    cubeFrame[layer][2][2] = cubeFrame[layer][2][0];
+    cubeFrame[layer][2][0] = hold;
 
-    // Save the initial edge piece
-    hold = piece[layer][0][1];
+    // Save the initial edge cubeFrame
+    hold = cubeFrame[layer][0][1];
 
     // Rotating the edges counterclockwise
-    piece[layer][0][1] = piece[layer][1][2];
-    piece[layer][1][2] = piece[layer][2][1];
-    piece[layer][2][1] = piece[layer][1][0];
-    piece[layer][1][0] = hold;
+    cubeFrame[layer][0][1] = cubeFrame[layer][1][2];
+    cubeFrame[layer][1][2] = cubeFrame[layer][2][1];
+    cubeFrame[layer][2][1] = cubeFrame[layer][1][0];
+    cubeFrame[layer][1][0] = hold;
 }
 }
 function setYArray(direction, layer){
  
   if (direction > 0) {
     // Rotating the corners clockwise
-    let hold = piece[2][layer][2];  
+    let hold = cubeFrame[2][layer][2];  
 
-    piece[2][layer][2] = piece[2][layer][0];
-    piece[2][layer][0] = piece[0][layer][0];
-    piece[0][layer][0] = piece[0][layer][2];
-    piece[0][layer][2] = hold;
+    cubeFrame[2][layer][2] = cubeFrame[2][layer][0];
+    cubeFrame[2][layer][0] = cubeFrame[0][layer][0];
+    cubeFrame[0][layer][0] = cubeFrame[0][layer][2];
+    cubeFrame[0][layer][2] = hold;
 
-    // Save the initial edge piece
-    hold = piece[1][layer][0];
+    // Save the initial edge cubeFrame
+    hold = cubeFrame[1][layer][0];
 
     // Rotating the edges clockwise
-    piece[1][layer][0] = piece[0][layer][1];
-    piece[0][layer][1] = piece[1][layer][2];
-    piece[1][layer][2] = piece[2][layer][1];
-    piece[2][layer][1] = hold;
+    cubeFrame[1][layer][0] = cubeFrame[0][layer][1];
+    cubeFrame[0][layer][1] = cubeFrame[1][layer][2];
+    cubeFrame[1][layer][2] = cubeFrame[2][layer][1];
+    cubeFrame[2][layer][1] = hold;
   }
   else{
     // Rotating the corners counterclockwise
-    let hold = piece[2][layer][2];
+    let hold = cubeFrame[2][layer][2];
 
-    piece[2][layer][2] = piece[0][layer][2];
-    piece[0][layer][2] = piece[0][layer][0];
-    piece[0][layer][0] = piece[2][layer][0];
-    piece[2][layer][0] = hold;
+    cubeFrame[2][layer][2] = cubeFrame[0][layer][2];
+    cubeFrame[0][layer][2] = cubeFrame[0][layer][0];
+    cubeFrame[0][layer][0] = cubeFrame[2][layer][0];
+    cubeFrame[2][layer][0] = hold;
 
-    // Save the initial edge piece
-    hold = piece[1][layer][0];
+    // Save the initial edge cubeFrame
+    hold = cubeFrame[1][layer][0];
 
     // Rotating the edges counterclockwise
-    piece[1][layer][0] = piece[2][layer][1];
-    piece[2][layer][1] = piece[1][layer][2];
-    piece[1][layer][2] = piece[0][layer][1];
-    piece[0][layer][1] = hold;
+    cubeFrame[1][layer][0] = cubeFrame[2][layer][1];
+    cubeFrame[2][layer][1] = cubeFrame[1][layer][2];
+    cubeFrame[1][layer][2] = cubeFrame[0][layer][1];
+    cubeFrame[0][layer][1] = hold;
 }
 }
-
 
 
 let turning = 0
@@ -299,9 +311,26 @@ let vector = speed
 
 
 
+
+function isAcceptedState(){
+
+  for (let i = 0, x = -5; i < 3; i++, x += 5) {
+    for (let j = 0, y = -5; j < 3; j++, y += 5) {
+      for (let k = 0, z = -5; k < 3; k++, z += 5) {
+        if(cubeFrame[i][j][k] != piece[i][j][k])
+          return false
+      }
+    }
+  }
+  return true
+}
+
+
+
+
 function animate (){
   requestAnimationFrame( animate )
-  
+  // console.log(isAcceptedState())
   if(turning > 0){
     switch(sidetoturn){
       case 'x0':
