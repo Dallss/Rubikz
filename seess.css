@@ -123,7 +123,7 @@ max-height: 100%;
 body{
     /* background: radial-gradient(circle at 0% 100%, rgb(3, 3, 52), rgb(30, 24, 95) 60%, rgb(20, 17, 49) 80%,rgb(3, 3, 29) 99%); */
     display: flex;
-    background-image: url(./bg.png);
+    background-image: url(static/bg.png);
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;

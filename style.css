@@ -17,8 +17,8 @@ body {
   align-items: center;
   color: white;
   font-family: Arial, Helvetica, sans-serif;
-  margin: 0; /* Ensure no default margin */
-  cursor: url('Cursor.png'), auto;
+  margin: 0;
+  cursor: url('static/Cursor.png'), auto;
 }
 a {
   color: white;
@@ -27,7 +27,7 @@ a {
 }
 .container {
   text-align: center;
-  cursor: url('Cursor.png'), auto;
+  cursor: url('static/Cursor.png'), auto;
 }
 .menu {
   display: flex;
@@ -76,7 +76,7 @@ html, body {
   margin: 0;
 }
 body {
-  background-image: url('home.jpg');
+  background-image: url('static/home.jpg');
   background-size: cover; 
   background-repeat: no-repeat; 
   background-position: center; 
@@ -92,24 +92,24 @@ body {
 
 #play2d:hover {
   color: rgb(255, 239, 16); 
-  cursor: url('Cursor.png'), auto;
+  cursor: url('static/Cursor.png'), auto;
 }
 
 
 #play3d:hover {
   color: rgb(255, 239, 16);
-  cursor: url('Cursor.png'), auto;
+  cursor: url('static/Cursor.png'), auto;
 }
 
 
 #about:hover {
   color: rgb(255, 239, 16);
-  cursor: url('Cursor.png'), auto;
+  cursor: url('static/Cursor.png'), auto;
 }
 
 @font-face {
   font-family: 'metronauts';
-  src: url('metronauts.ttf') format('truetype');
+  src: url('static/metronauts.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }

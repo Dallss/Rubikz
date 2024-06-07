@@ -1,95 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>RUBIKZ 3D</title>
-    <style>
-      body{
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        height: 100%;
-        margin: 0;
-      }
-      .container{
-        height: 100vh;
-        /* background-color: rgb(56, 56, 130); */
-        background-image: url(static/bg.png);
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: cover;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-      }
-      .cubespace{
-        border-radius: 10px;
-        border: 5px solid white;
-        margin-top: 20px;
-        margin-bottom: 20px;
-      }
-      .title{
-        color: white;
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: xx-large;
-        font-weight: bold;
-      }
-      button{
-        border-radius: 10px;
-        width: 30px;
-        height: 30px;
-        margin: 1px;
-        padding: 1px;
-        font-weight: bold;
-        /* border: 1px solid black; */
-      }
-      .rotate{
-        width: 100px;
-        height: 100px;
-        /* border: 3px solid blue; */
-      }
-      button:hover{
-        background-color: rgb(56, 56, 130);
-        color: white;
-      }
-      .title{
-        height: 100px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-      .title img{
-        max-width: 100%;
-        max-height: 100%;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <div class="title">
-        <img class="logo" src="static/logo.png" alt="">
-      </div>
-      <canvas class="cubespace" id="canvas"></canvas>
-      <!-- <div class="buttons">
-        <button class="f" id="Front">F</button>
-        <button class="r">R </button>
-        <button class="u">U </button>
-        <button class="b">B </button>
-        <button class="l">L </button>
-        <button class="d">D </button>
-        <br>
-        <button class="fp" id="Front Reverse">F'</button>
-        <button class="rp">R' </button>
-        <button class="up">U' </button>
-        <button class="bp">B' </button>
-        <button class="lp">L' </button>
-        <button class="dp">D' </button>
-      </div> -->
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>RUBIK</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body style="background-image: url(static/home.jpg); background-size: cover; background-repeat: no-repeat; background-position: center;">
+    <div class="top-right">
+        <div id="toggleSound">
+            <img id="soundIcon" src="static/music-on.png" alt="Sound Icon">
+        </div>
     </div>
+    <div class="container">
+        <div class="title">
+        </div>
+        <div class="button-container">
+            <button id="play2d" class="rubix" onclick="location.href='2d.html'">Play 2D</button>
+            <button id="play3d" class="rubix" onclick="location.href='3DPlay.html'">Play 3D</button>
+            <button id="about" class="rubix" onclick="location.href='About-Page.html'">ABOUT</button>
+        </div>
+    </div>
+    <audio id="song" muted>
+        <source src="static/Bakunawa.mp3" type="audio/mpeg">
+    </audio>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const audio = document.getElementById("song");
+            const button = document.getElementById("toggleSound");
+            const soundIcon = document.getElementById("soundIcon");
+            const hoverSound = new Audio("static/hoverbg.mp3");
+            const play2DButton = document.getElementById("play2d");
 
-    <script type="module" src="/main.js"></script>
-  </body>
+            button.addEventListener('click', () => {
+                if (audio.muted) {
+                    audio.muted = false;
+                    soundIcon.src = 'static/music-on.png';
+                } else {
+                    audio.muted = true;
+                    soundIcon.src = 'static/music-off.png';
+                }
+
+                audio.play().catch(error => {
+                    console.error('Error playing the audio:', error);
+                });
+            });
+
+            play2DButton.addEventListener('click', () => {
+                hoverSound.play().catch(error => {
+                    console.error('Error playing the hover sound:', error);
+                });
+            });
+        });
+    </script>
+</body>
 </html>
