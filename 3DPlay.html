@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>RUBIKZ 3D</title>
+    <title>RUBIKZ</title>
     <style>
       body{
         display: flex;
@@ -12,6 +12,19 @@
         width: 100%;
         height: 100%;
         margin: 0;
+      }
+      .main-content{
+        display: flex;
+      }
+      .play-guide{
+        border-radius: 20px;
+        border: 5px solid rgb(202, 202, 202);
+        background-color: rgba(183, 193, 201, 0.451);
+        margin-left: 20px;
+        padding-left: 3rem;
+        padding-right: 3rem;
+        width: 15vw;
+        height: 300px;
       }
       .container{
         height: 100vh;
@@ -34,7 +47,6 @@
       .title{
         color: white;
         font-family: Arial, Helvetica, sans-serif;
-        font-size: xx-large;
         font-weight: bold;
       }
       button{
@@ -72,7 +84,21 @@
       <div class="title">
         <img class="logo" src="static/logo.png" alt="">
       </div>
-      <canvas class="cubespace" id="canvas"></canvas>
+
+      <div class="main-content">
+        <canvas class="cubespace" id="canvas"></canvas>
+        <div class="play-guide">
+
+          <h3>Key bindings: </h2>
+            &nbsp; X-Axis:  &nbsp;q w e <br>
+            &nbsp; Y-Axis:  &nbsp;i o p <br>
+            &nbsp; Z-Axis:  &nbsp;f d h <br><br>
+
+            &nbsp;Use with 'shift' to do reverse of move
+
+        </div>
+      </div>
+      
       <!-- <div class="buttons">
         <button class="f" id="Front">F</button>
         <button class="r">R </button>
