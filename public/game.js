@@ -35,6 +35,27 @@ const time = {
 
 }
 
+// --- Inspection/Solve Timer Logic ---
+let inspectionTimerId = null;
+let solveTimerId = null;
+let inspectionTimeLeft = 0;
+let isInspecting = false;
+let isSolving = false;
+let solveStartTime = 0;
+let solveEndTime = 0;
+let solveResult = '';
+const observeStatus = document.getElementById('observe-status');
+
+function showObserveStatus(msg, color = '#fff', bg = '#333') {
+    observeStatus.style.display = 'block';
+    observeStatus.style.color = color;
+    observeStatus.style.background = bg;
+    observeStatus.innerHTML = msg;
+}
+function hideObserveStatus() {
+    observeStatus.style.display = 'none';
+}
+
 function init () {
     console.log('onload executed');
 
@@ -515,6 +536,8 @@ function shuffle() {
 
     // Update the UI after shuffling
     init();
+    // Start inspection phase
+    startInspection();
 }
 
 function toggleTime () {
@@ -525,13 +548,19 @@ function toggleTime () {
     }
 }
 
+function setTimerButtonEnabled(enabled) {
+    strop.disabled = !enabled;
+    strop.style.opacity = enabled ? '1' : '0.5';
+}
+
 function startTime () {
-    
+    if (isInspecting || isSolving) return; // Prevent running during inspection/solve
+    // Always clear both intervals before starting
+    if (timerId) { clearInterval(timerId); timerId = null; console.log('Cleared timerId before starting new manual timer'); }
+    if (solveTimerId) { clearInterval(solveTimerId); solveTimerId = null; console.log('Cleared solveTimerId before starting new manual timer'); }
     console.log('starttiem called')
-    
     strop.innerHTML = 'Stop'
     time.running = true
-
     timerId = setInterval(() => {
         time.seconds++;
         if(time.seconds > 59){
@@ -544,12 +573,8 @@ function startTime () {
         else{
             sec.innerHTML = time.seconds;
         }
-
     }, 1000);
-
-    // strop.removeEventListener('click', startTime)
-    // strop.addEventListener('click', stopTime)
-
+    console.log('Started manual timer, timerId:', timerId);
 }
 
 
@@ -598,15 +623,11 @@ function solve () {
 }
 
 function stopTime () {
-
     console.log('stop Time was called')
-
     strop.innerHTML = 'Start Time'
     time.running = false;
-
-    clearInterval(timerId) 
-    
-
+    if (timerId) { clearInterval(timerId); timerId = null; console.log('Cleared timerId in stopTime'); }
+    if (solveTimerId) { clearInterval(solveTimerId); solveTimerId = null; console.log('Cleared solveTimerId in stopTime'); }
 }
 
 //for leaderboard
@@ -663,3 +684,125 @@ for(let i = 0; i < anims.length; i++){
     let randomy = -700 + Math.floor(Math.random() * 700)
     anims[i].style.transform = `translate(${randomx}px,${randomy}px)`
 }
+
+function startInspection() {
+    setTimerButtonEnabled(false);
+    setGiveUpButtonState(true);
+    if (inspectionTimerId) clearInterval(inspectionTimerId);
+    if (solveTimerId) clearInterval(solveTimerId);
+    inspectionTimeLeft = 2;
+    isInspecting = true;
+    isSolving = false;
+    showObserveStatus('Observing time: <span id="inspect-count">' + inspectionTimeLeft + '</span>');
+    updateInspectCount();
+    inspectionTimerId = setInterval(() => {
+        inspectionTimeLeft--;
+        updateInspectCount();
+        if (inspectionTimeLeft <= 0) {
+            clearInterval(inspectionTimerId);
+            isInspecting = false;
+            startSolveTimer();
+        }
+    }, 1000);
+}
+function updateInspectCount() {
+    const el = document.getElementById('inspect-count');
+    if (el) el.textContent = inspectionTimeLeft;
+}
+function startSolveTimer() {
+    // Always clear both intervals before starting
+    if (timerId) { clearInterval(timerId); timerId = null; console.log('Cleared timerId before starting solve timer'); }
+    if (solveTimerId) { clearInterval(solveTimerId); solveTimerId = null; console.log('Cleared solveTimerId before starting solve timer'); }
+    isSolving = true;
+    setGiveUpButtonState(true);
+    solveStartTime = Date.now();
+    hideObserveStatus();
+    let lastSeconds = -1;
+    solveTimerId = setInterval(() => {
+        const elapsed = Math.floor((Date.now() - solveStartTime) / 1000);
+        if (elapsed !== lastSeconds) {
+            lastSeconds = elapsed;
+            // Update the main timer box
+            const m = Math.floor(elapsed / 60);
+            const s = elapsed % 60;
+            mins.innerHTML = m + ':';
+            sec.innerHTML = (s < 10 ? '0' : '') + s;
+        }
+    }, 100);
+    console.log('Started solve timer, solveTimerId:', solveTimerId);
+}
+function stopSolveTimer() {
+    if (solveTimerId) { clearInterval(solveTimerId); solveTimerId = null; console.log('Cleared solveTimerId in stopSolveTimer'); }
+    if (timerId) { clearInterval(timerId); timerId = null; console.log('Cleared timerId in stopSolveTimer'); }
+    isSolving = false;
+    setTimerButtonEnabled(true);
+    setGiveUpButtonState(false);
+}
+function formatTime(totalSeconds) {
+    const m = Math.floor(totalSeconds / 60);
+    const s = totalSeconds % 60;
+    return m + ':' + (s < 10 ? '0' : '') + s;
+}
+// Patch isCubeSolved to trigger solve result
+const origIsCubeSolved = isCubeSolved;
+isCubeSolved = function() {
+    const solved = origIsCubeSolved.apply(this, arguments);
+    if (solved && isSolving) {
+        solveEndTime = Date.now();
+        const elapsed = Math.floor((solveEndTime - solveStartTime) / 1000);
+        solveResult = formatTime(elapsed);
+        stopSolveTimer();
+        // Reset timer display to zero
+        mins.innerHTML = '0:';
+        sec.innerHTML = '00';
+        // Save to leaderboard
+        saveScore(solveResult);
+        displayLeaderboard();
+        // Do not show solve time in observe-status div
+        hideObserveStatus();
+    }
+    return solved;
+}
+
+// --- Give Up Button Logic ---
+function resetToInitialState() {
+    // Stop all timers
+    if (timerId) { clearInterval(timerId); timerId = null; }
+    if (solveTimerId) { clearInterval(solveTimerId); solveTimerId = null; }
+    if (inspectionTimerId) { clearInterval(inspectionTimerId); inspectionTimerId = null; }
+    isInspecting = false;
+    isSolving = false;
+    time.seconds = 0;
+    time.minutes = 0;
+    mins.innerHTML = '0:';
+    sec.innerHTML = '00';
+    hideObserveStatus();
+    setTimerButtonEnabled(true);
+    // Optionally, reset the cube to solved state
+    for(let i=0;i<9;i++) face[i]='yellow';
+    for(let i=0;i<9;i++) left[i]='orange';
+    for(let i=0;i<9;i++) right[i]='red';
+    for(let i=0;i<9;i++) tp[i]='green';
+    for(let i=0;i<9;i++) bottom[i]='blue';
+    for(let i=0;i<9;i++) back[i]='white';
+    init();
+}
+function setGiveUpButtonState(isActive) {
+    if (isActive) {
+        solb.textContent = 'Give Up';
+    } else {
+        solb.textContent = 'Solve';
+    }
+}
+// Replace solve button logic
+solb.removeEventListener('click', solve);
+solb.addEventListener('click', function() {
+    if (isInspecting || isSolving) {
+        // Give up: reset everything, do not record
+        resetToInitialState();
+        setGiveUpButtonState(false);
+    } else {
+        // Normal solve (if you want to keep this for manual solves)
+        solve();
+    }
+});
