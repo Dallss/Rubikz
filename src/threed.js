@@ -292,7 +292,7 @@ function setYArray(direction, layer){
 
 let turning = 0
 let sidetoturn = ''
-let speed = 3
+let speed = 5
 let vector = speed
 
 
