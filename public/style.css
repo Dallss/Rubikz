@@ -18,7 +18,11 @@ body {
   color: white;
   font-family: Arial, Helvetica, sans-serif;
   margin: 0;
-  cursor: url('static/Cursor.png'), auto;
+
+  background-image: url('static/home.jpg');
+  background-size: cover; 
+  background-repeat: no-repeat; 
+  background-position: center; 
 }
 a {
   color: white;
@@ -27,7 +31,6 @@ a {
 }
 .container {
   text-align: center;
-  cursor: url('static/Cursor.png'), auto;
 }
 .menu {
   display: flex;
@@ -40,7 +43,6 @@ button {
   padding: 20px 30px;
   margin-top: 20px;
   border: 5px solid rgb(128, 126, 126);;
-  cursor: pointer;
   border-radius: 25px;
   width: fit-content; 
   height: auto; 
@@ -51,35 +53,16 @@ button {
 .rubix {
   padding: 10px 20px;
   font-size: 40px;
-  cursor: pointer;
   border: none; 
   background-color: transparent;
   color: white; 
   font-family: 'Metronauts';
 }
 
-#soundIcon {
-  width: 150px; 
-  height: 150px; 
-  object-fit: contain;
-}
-
-
 .top-right {
   position: absolute;
   top: 10px; 
   right: 10px; 
-}
-
-html, body {
-  height: 100%;
-  margin: 0;
-}
-body {
-  background-image: url('static/home.jpg');
-  background-size: cover; 
-  background-repeat: no-repeat; 
-  background-position: center; 
 }
 
 .button-container {
@@ -90,21 +73,8 @@ body {
   margin-bottom: -300px; 
 }
 
-#play2d:hover {
-  color: rgb(255, 239, 16); 
-  cursor: url('static/Cursor.png'), auto;
-}
-
-
 #play3d:hover {
   color: rgb(255, 239, 16);
-  cursor: url('static/Cursor.png'), auto;
-}
-
-
-#about:hover {
-  color: rgb(255, 239, 16);
-  cursor: url('static/Cursor.png'), auto;
 }
 
 @font-face {

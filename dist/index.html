@@ -8,51 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="style.css">
 </head>
-<body style="background-image: url(static/home.jpg); background-size: cover; background-repeat: no-repeat; background-position: center;">
-    <div class="top-right">
-        <div id="toggleSound">
-            <img id="soundIcon" src="static/music-on.png" alt="Sound Icon">
-        </div>
-    </div>
+<body>
     <div class="container">
         <div class="title">
         </div>
         <div class="button-container">
-           <button id="play2d" class="rubix" onclick="location.href='/two-d.html'">Play 2D</button>
-            <button id="play3d" class="rubix" onclick="location.href='/three-d-play.html'">Play 3D</button>
+            <button id="play3d" class="rubix" onclick="location.href='/play.html'">Play</button>
         </div>
     </div>
-    <audio id="song" muted>
-        <source src="static/Bakunawa.mp3" type="audio/mpeg">
-    </audio>
-    <script>
-        window.addEventListener('DOMContentLoaded', () => {
-            const audio = document.getElementById("song");
-            const button = document.getElementById("toggleSound");
-            const soundIcon = document.getElementById("soundIcon");
-            const hoverSound = new Audio("static/hoverbg.mp3");
-            const play2DButton = document.getElementById("play2d");
-
-            button.addEventListener('click', () => {
-                if (audio.muted) {
-                    audio.muted = false;
-                    soundIcon.src = 'static/music-on.png';
-                } else {
-                    audio.muted = true;
-                    soundIcon.src = 'static/music-off.png';
-                }
-
-                audio.play().catch(error => {
-                    console.error('Error playing the audio:', error);
-                });
-            });
-
-            play2DButton.addEventListener('click', () => {
-                hoverSound.play().catch(error => {
-                    console.error('Error playing the hover sound:', error);
-                });
-            });
-        });
-    </script>
 </body>
 </html>
